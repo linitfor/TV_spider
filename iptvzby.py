@@ -9,12 +9,6 @@ from datetime import datetime
 import threading
 from queue import Queue
 
-# 获取远程频道源ipv4.txt
-url = 'https://taoiptv.com/source/iptv.txt?token=8zlxhttq9h01ahww'
-r = requests.get(url)
-with open("ipv4.txt", "wb") as code:
-    code.write(r.content)
-
 #  获取远程港澳台直播源文件
 url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Fairy8o/IPTV/main/DIYP-v4.txt"
 r = requests.get(url)
@@ -49,33 +43,6 @@ for file_path in file_paths:
 with open("GAT.txt", "w", encoding="utf-8") as output:
     output.write('\n'.join(file_contents))
 
-
-# # 获取远程湖南地方频道源，并将.m3u文件转换成.txt
-# json_url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/arbaleast/mgtv/main/mgtv.m3u"
-#
-# response = requests.get(json_url)
-# data = response.text
-#
-# lines = data.split('\n')
-#
-# channel_data = []
-# current_name = ''
-#
-# for line in lines:
-#     line = line.strip()
-#     if line.startswith('#EXTINF'):
-#         channel_info = line.split(',', 1)
-#         current_name = channel_info[1] if len(channel_info) > 1 else ''
-#     elif line.startswith('http'):
-#         if current_name and line:
-#             channel_data.append(f'{current_name},{line}')
-#
-# for item in channel_data:
-#     print(item)
-#
-# with open("difang.txt", 'w', encoding='utf-8') as file:
-#     for item in channel_data:
-#         file.write(item + "\n")
 
 # 扫源
 urls = [
@@ -353,57 +320,11 @@ with open("iptv.txt", 'w', encoding='utf-8') as file:
         file.write(result + "\n")
         print(result)
 
-print("频道列表文件ipv4.txt,iptv.txt获取完成！")
+print("频道列表文件iptv.txt获取完成！")
 
 
 import eventlet
 eventlet.monkey_patch()
-
-# 读取IPTV4.txt文件
-results = []
-result_counter = 10  # 每个频道需要的个数
-with open("ipv4.txt", 'r', encoding='utf-8') as file:
-    lines = file.readlines()
-    for line in lines:
-        line = line.strip()
-        if line:
-            channel_name, channel_url = line.split(',')
-            if 'genre' not in channel_url:
-                results.append((channel_name, channel_url))
-
-# 将IPV4文件内容写入到cctv.txt
-channel_counters = {}
-with open("cctv.txt", 'w', encoding='utf-8') as file:
-    file.write('央视频道,#genre#\n')
-    for result in results:
-        channel_name, channel_url = result
-        if 'CCTV' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-
-# 将IPV4文件内容写入到weishi.txt
-channel_counters = {}
-with open("weishi.txt", 'w', encoding='utf-8') as file:
-    file.write('卫视频道,#genre#\n')
-    for result in results:
-        channel_name, channel_url = result
-        if '卫视' in channel_name or '凤凰' in channel_name or '翡翠' in channel_name or 'TVB' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
 
 # 线程安全的队列，用于存储下载任务
 task_queue = Queue()
@@ -501,34 +422,34 @@ results.sort(key=lambda x: channel_key(x[0]))
 result_counter = 10  # 每个频道需要的个数
 
 with open("hn.txt", 'w', encoding='utf-8') as file:
-    # channel_counters = {}
-    # file.write('央视频道,#genre#\n')
-    # for result in results:
-    #     channel_name, channel_url, speed = result
-    #     if 'CCTV' in channel_name:
-    #         if channel_name in channel_counters:
-    #             if channel_counters[channel_name] >= result_counter:
-    #                 continue
-    #             else:
-    #                 file.write(f"{channel_name},{channel_url}\n")
-    #                 channel_counters[channel_name] += 1
-    #         else:
-    #             file.write(f"{channel_name},{channel_url}\n")
-    #             channel_counters[channel_name] = 1
-    # channel_counters = {}
-    # file.write('卫视频道,#genre#\n')
-    # for result in results:
-    #     channel_name, channel_url, speed = result
-    #     if '卫视' in channel_name:
-    #         if channel_name in channel_counters:
-    #             if channel_counters[channel_name] >= result_counter:
-    #                 continue
-    #             else:
-    #                 file.write(f"{channel_name},{channel_url}\n")
-    #                 channel_counters[channel_name] += 1
-    #         else:
-    #             file.write(f"{channel_name},{channel_url}\n")
-    #             channel_counters[channel_name] = 1
+    channel_counters = {}
+    file.write('央视频道,#genre#\n')
+    for result in results:
+        channel_name, channel_url, speed = result
+        if 'CCTV' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+    channel_counters = {}
+    file.write('卫视频道,#genre#\n')
+    for result in results:
+        channel_name, channel_url, speed = result
+        if '卫视' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
     channel_counters = {}
     file.write('湖南频道,#genre#\n')
     for result in results:
@@ -545,7 +466,7 @@ with open("hn.txt", 'w', encoding='utf-8') as file:
                 channel_counters[channel_name] = 1
 # 合并自定义频道文件内容
 file_contents = []
-file_paths = ["YD-IPTV.txt", "cctv.txt", "weishi.txt", "hn.txt", "GAT.txt"]  # 替换为实际的文件路径列表
+file_paths = ["YD-IPTV.txt","hn.txt", "GAT.txt"]  # 替换为实际的文件路径列表
 for file_path in file_paths:
     with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
@@ -561,10 +482,7 @@ with open("iptv_list.txt", "w", encoding="utf-8") as output:
     output.write(f"{now.strftime("%Y-%m-%d")},url\n")
     output.write(f"{now.strftime("%H:%M:%S")},url\n")
 
-os.remove("ipv4.txt")
 os.remove("iptv.txt")
-os.remove("cctv.txt")
-os.remove("weishi.txt")
 os.remove("GAT.txt")
 os.remove("hn.txt")
 os.remove("DIYP-v4.txt")
