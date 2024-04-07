@@ -341,7 +341,7 @@ with open("iptv.txt", 'r', encoding='utf-8') as file:
         line = line.strip()
         if line:
             channel_name, channel_url = line.split(',')
-            if 'CCTV' not in channel_name and '卫视' not in channel_name:
+            if 'genre' not in channel_url:
                 channels.append((channel_name, channel_url))
 
 
@@ -436,6 +436,7 @@ with open("hn.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
+                        
     channel_counters = {}
     file.write('卫视频道,#genre#\n')
     for result in results:
@@ -450,6 +451,7 @@ with open("hn.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
+                        
     channel_counters = {}
     file.write('湖南频道,#genre#\n')
     for result in results:
