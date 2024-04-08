@@ -1,13 +1,15 @@
 import time
-import os
 import concurrent.futures
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import requests
 import re
-from datetime import datetime
+import os
 import threading
 from queue import Queue
+from datetime import datetime
+import eventlet
+eventlet.monkey_patch()
 
 #  获取远程港澳台直播源文件
 url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Fairy8o/IPTV/main/DIYP-v4.txt"
@@ -313,18 +315,21 @@ for url in urls:
         except:
             continue
 
-results = set(results)  # 去重得到唯一的URL列表
-results = sorted(results)
+channels = []
+
+for result in results:
+    line = result.strip()
+    if result:
+        channel_name, channel_url = result.split(',')
+        channels.append((channel_name, channel_url))
+
 with open("iptv.txt", 'w', encoding='utf-8') as file:
     for result in results:
         file.write(result + "\n")
         print(result)
-
 print("频道列表文件iptv.txt获取完成！")
 
 
-import eventlet
-eventlet.monkey_patch()
 
 # 线程安全的队列，用于存储下载任务
 task_queue = Queue()
@@ -466,6 +471,7 @@ with open("hn.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
+                        
 # 合并自定义频道文件内容
 file_contents = []
 file_paths = ["YD-IPTV.txt","hn.txt", "GAT.txt"]  # 替换为实际的文件路径列表
