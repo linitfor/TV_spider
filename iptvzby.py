@@ -8,8 +8,7 @@ import os
 import threading
 from queue import Queue
 from datetime import datetime
-import eventlet
-eventlet.monkey_patch()
+
 
 #  获取远程港澳台直播源文件
 url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Fairy8o/IPTV/main/DIYP-v4.txt"
@@ -329,7 +328,9 @@ with open("iptv.txt", 'w', encoding='utf-8') as file:
         print(result)
 print("频道列表文件iptv.txt获取完成！")
 
+import eventlet
 
+eventlet.monkey_patch()
 
 # 线程安全的队列，用于存储下载任务
 task_queue = Queue()
