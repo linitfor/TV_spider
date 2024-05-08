@@ -342,9 +342,24 @@ for url in urls:
                             name = name.replace("嘉佳卡通", "佳嘉卡通")
                             name = name.replace("世界地理", "地理世界")
                             name = name.replace("CCTV世界地理", "地理世界")
+                            name = name.replace("BTV文艺", "北京文艺")
+                            name = name.replace("BTV影视", "北京影视")
+                            name = name.replace("BTV科教", "北京科教")
+                            name = name.replace("BTV财经", "北京财经")
+                            name = name.replace("BTV生活", "北京生活")
+                            name = name.replace("BTV新闻", "北京新闻")
+                            name = name.replace("BTV体育", "北京体育")
+                            name = name.replace("BTV青年", "北京青年")  
+                            name = name.replace("卡酷少儿", "北京卡酷少儿")
                             name = name.replace("BTV北京卫视", "北京卫视")
-                            name = name.replace("BTV冬奥纪实", "冬奥纪实")
+                            name = name.replace("BTV冬奥纪实", "北京冬奥纪实")
                             name = name.replace("东奥纪实", "冬奥纪实")
+                            name = name.replace("都市", "河南都市")
+                            name = name.replace("民生", "河南民生")
+                            name = name.replace("法制", "河南法制")
+                            name = name.replace("新闻", "河南新闻")
+                            name = name.replace("移动戏曲", "河南移动戏曲")
+                            name = name.replace("梨园", "冬奥纪实")
                             name = name.replace("卫视台", "卫视")
                             name = name.replace("湖南电视台", "湖南卫视")
                             name = name.replace("少儿科教", "少儿")
@@ -473,7 +488,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     file.write('央视频道,#genre#\n')
     for result in results:
         channel_name, channel_url, speed = result
-        if 'CCTV' in channel_name:
+        if 'CCTV' in channel_nam eor 'CGTN' in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
@@ -548,7 +563,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     file.write('其他频道,#genre#\n')
     for result in results:
         channel_name, channel_url, speed = result
-        if 'CCTV' not in channel_name or '卫视' not in channel_name or '湖北' not in channel_name or '武汉' not in channel_name or '黄石' not in channel_name or '十堰' not in channel_name or '荆门' not in channel_name or '荆州' not in channel_name:
+        if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '北京' not in channel_name and '河南' not in channel_name and '卫视' not in channel_name and '湖北' not in channel_name and '武汉' not in channel_name and '黄石' not in channel_name anb '十堰' not in channel_name and '荆门' not in channel_name or '荆州' not in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
