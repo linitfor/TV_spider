@@ -87,10 +87,10 @@ with open("sport.txt", "w", encoding="utf-8") as output_file:
         for link in links:
             output_file.write(f"{link}\n")
 
-# 扫源
+# 扫源IPTV
 urls = [
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0iSGViZWki",                # 河 北
-    # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0iYmVpamluZyI%3D",          # 北 京
+    "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0iYmVpamluZyI%3D",          # 北 京
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0iZ3Vhbmdkb25nIg%3D%3D",    # 广 东
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0ic2hhbmdoYWki",            # 上 海
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0idGlhbmppbiI%3D",          # 天 津
@@ -102,8 +102,7 @@ urls = [
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0iRnVqaWFuIg%3D%3D",        # 福 建
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0i5rGf6KW%2FIg%3D%3D",      # 江 西
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0i5bGx5LicIg%3D%3D",        # 山 东
-    # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0i5rKz5Y2XIg%3D%3D",        # 河 南
-    # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0i5rmW5YyXIg%3D%3D",        # 湖 北
+    "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0i5rKz5Y2XIg%3D%3D",        # 河 南
     "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0i5rmW5YyXIg%3D%3D",    # 湖 北
     "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIGNpdHk9Ind1aGFuIg%3D%3D",        # 武 汉
     "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIGNpdHk9InNoaXlhbiI%3D",	    # 十 堰
@@ -324,11 +323,11 @@ for url in urls:
                             name = name.replace("CCTV5+体育", "CCTV5+")
                             name = name.replace("CCTV5赛事", "CCTV5+")
                             name = name.replace("凤凰中文台", "凤凰中文")
+                            name = name.replace("凤凰卫视", "凤凰中文")
                             name = name.replace("凤凰资讯台", "凤凰资讯")
                             name = name.replace("CCTV4K测试）", "CCTV4")
                             name = name.replace("CCTV164K", "CCTV16")
-                            name = name.replace("上海东方卫视", "上海卫视")
-                            name = name.replace("东方卫视", "上海卫视")
+                            name = name.replace("上海东方卫视", "东方卫视")
                             name = name.replace("内蒙卫视", "内蒙古卫视")
                             name = name.replace("福建东南卫视", "东南卫视")
                             name = name.replace("广东南方卫视", "南方卫视")
@@ -501,10 +500,55 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
                 channel_counters[channel_name] = 1
                         
     channel_counters = {}
+    file.write('北京频道,#genre#\n')
+    for result in results:
+        channel_name, channel_url, speed = result
+        if '北京' in channel_name or '海淀' in channel_name or '朝阳' in channel_name or '丰台' in channel_name or '东城' in channel_name or '西城' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+                        
+    channel_counters = {}
     file.write('湖北频道,#genre#\n')
     for result in results:
         channel_name, channel_url, speed = result
         if '湖北' in channel_name or '武汉' in channel_name or '黄石' in channel_name or '十堰' in channel_name or '荆门' in channel_name or '荆州' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+                        
+    channel_counters = {}
+    file.write('河南频道,#genre#\n')
+    for result in results:
+        channel_name, channel_url, speed = result
+        if '河南' in channel_name or '郑州' in channel_name or '开封' in channel_name or '洛阳' in channel_name or '许昌' in channel_name or '驻马店' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+
+    channel_counters = {}
+    file.write('其他频道,#genre#\n')
+    for result in results:
+        channel_name, channel_url, speed = result
+        if 'CCTV' not in channel_name or '卫视' not in channel_name or '湖北' not in channel_name or '武汉' not in channel_name or '黄石' not in channel_name or '十堰' not in channel_name or '荆门' not in channel_name or '荆州' not in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
