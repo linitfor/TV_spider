@@ -45,6 +45,48 @@ with open("GAT.txt", "w", encoding="utf-8") as output:
     output.write('\n'.join(file_contents))
 
 
+
+#  获取远程体育直播源文件
+url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Cx4x/Cxxx/main/TKTY.m3u"
+response = requests.get(url)
+m3u_content = response.text
+
+# 移除第一行
+# m3u_content = m3u_content.split('\n', 1)[1]
+
+# 初始化变量
+group_name = ""
+channel_name = ""
+channel_link = ""
+output_dict = {}
+
+# 处理每两行为一组的情况
+for line in m3u_content.split('\n'):
+    if line.startswith("#EXTINF"):
+        # 获取 group-title 的值
+        group_name = line.split('group-title="')[1].split('"')[0]
+        
+        # 获取频道名
+        channel_name = line.split(',')[-1]
+    elif line.startswith("http"):
+        # 获取频道链接
+        channel_link = line
+        # 合并频道名和频道链接
+        combined_link = f"{channel_name},{channel_link}"
+
+        # 将组名作为键，合并链接作为值存储在字典中
+        if group_name not in output_dict:
+            output_dict[group_name] = []
+        output_dict[group_name].append(combined_link)
+
+# 将结果写入 sport.txt 文件
+with open("sport.txt", "w", encoding="utf-8") as output_file:
+    # 遍历字典，写入结果文件
+    for group_name, links in output_dict.items():
+        output_file.write(f"{group_name},#genre#\n")
+        for link in links:
+            output_file.write(f"{link}\n")
+
 # 扫源
 urls = [
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0iSGViZWki",                # 河 北
@@ -427,7 +469,7 @@ results.sort(key=lambda x: (x[0], -float(x[2].split()[0])))
 results.sort(key=lambda x: channel_key(x[0]))
 result_counter = 10  # 每个频道需要的个数
 
-with open("hn.txt", 'w', encoding='utf-8') as file:
+with open("hb.txt", 'w', encoding='utf-8') as file:
     channel_counters = {}
     file.write('央视频道,#genre#\n')
     for result in results:
@@ -462,7 +504,7 @@ with open("hn.txt", 'w', encoding='utf-8') as file:
     file.write('湖北频道,#genre#\n')
     for result in results:
         channel_name, channel_url, speed = result
-        if '湖南' in channel_name or '武汉' in channel_name or '黄石' in channel_name or '十堰' in channel_name or '荆门' in channel_name or '荆州' in channel_name:
+        if '湖北' in channel_name or '武汉' in channel_name or '黄石' in channel_name or '十堰' in channel_name or '荆门' in channel_name or '荆州' in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
@@ -475,7 +517,7 @@ with open("hn.txt", 'w', encoding='utf-8') as file:
                         
 # 合并自定义频道文件内容
 file_contents = []
-file_paths = ["hn.txt", "GAT.txt"]  # 替换为实际的文件路径列表
+file_paths = ["hb.txt", "GAT.txt","sport.txt"]  # 替换为实际的文件路径列表
 for file_path in file_paths:
     with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
@@ -493,10 +535,11 @@ with open("iptv_list.txt", "w", encoding="utf-8") as output:
 
 os.remove("iptv.txt")
 os.remove("GAT.txt")
-os.remove("hn.txt")
+os.remove("hb.txt")
 os.remove("DIYP-v4.txt")
 os.remove("HK.txt")
 os.remove("TW.txt")
+os.remove("sport.txt")
 
 def txt_to_m3u(input_file, output_file):
     # 读取txt文件内容
