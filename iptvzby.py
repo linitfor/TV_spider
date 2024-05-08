@@ -563,7 +563,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     file.write('其他频道,#genre#\n')
     for result in results:
         channel_name, channel_url, speed = result
-         if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '测试' not in channel_name and '北京' not in channel_name and '河南' not in channel_name and '湖北' not in channel_name and '武汉' not in channel_name and '黄石' not in channel_name and '十堰' not in channel_name and '荆门' not in channel_name and '荆州' not in channel_name:
+         if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '测试' not in channel_name:
                 if channel_counters[channel_name] >= result_counter:
                     continue
                 else:
