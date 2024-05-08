@@ -488,7 +488,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     file.write('央视频道,#genre#\n')
     for result in results:
         channel_name, channel_url, speed = result
-        if 'CCTV' in channel_nam eor 'CGTN' in channel_name:
+        if 'CCTV' in channel_name or 'CGTN' in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
