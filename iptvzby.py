@@ -564,6 +564,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     for result in results:
         channel_name, channel_url, speed = result
         if 'CCTV' not in channel_name and '卫视' not in channel_name and '测试' not in channel_name:
+            if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
                 else:
