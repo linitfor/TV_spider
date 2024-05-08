@@ -357,7 +357,7 @@ for url in urls:
                             name = name.replace("都市", "河南都市")
                             name = name.replace("民生", "河南民生")
                             name = name.replace("法制", "河南法制")
-                            name = name.replace("新闻", "河南新闻")
+                          # name = name.replace("新闻", "河南新闻")
                             name = name.replace("移动戏曲", "河南移动戏曲")
                             name = name.replace("梨园", "冬奥纪实")
                             name = name.replace("卫视台", "卫视")
@@ -563,7 +563,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     file.write('其他频道,#genre#\n')
     for result in results:
         channel_name, channel_url, speed = result
-        if 'CCTV' not in channel_name and '卫视' not in channel_name and '测试' not in channel_name:
+        if 'CCTV' not in channel_name and '卫视' not in channel_name and '测试' not in channel_name and '湖北' not in channel_name and '北京' not in channel_name and '河南' not in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
