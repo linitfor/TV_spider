@@ -931,7 +931,7 @@ with open("itv.txt", 'w', encoding='utf-8') as file:
     file.write('其他频道,#genre#\n')
     for resultx in resultxs:
         channel_name, channel_url = resultx
-        if 'CCTV' not in channel_name and '卫视' not in channel_name and '湖北' not in channel_name and '武汉' not channel_name and '宜昌' not channel_name and '黄石' not channel_name and '十堰' \
+        if 'CCTV' not in channel_name and '卫视' not in channel_name and '湖北' not in channel_name and '武汉' not in channel_name and '宜昌' not in channel_name and '黄石' not in channel_name and '十堰' \
               not in channel_name and '荆门' not in channel_name and '荆州' not in channel_name and '随州' not in channel_name and '襄阳' not in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
