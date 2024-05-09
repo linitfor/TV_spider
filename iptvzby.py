@@ -48,7 +48,7 @@ with open('zb.txt', 'r', encoding='utf-8') as file, open('CN4.txt', 'w', encodin
 
 keywords = ['北京']  # 需要提取的关键字列表
 pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
-with open('zb.txt', 'r', encoding='utf-8') as file, open('CN4.txt', 'w', encoding='utf-8') as CN5:
+with open('zb.txt', 'r', encoding='utf-8') as file, open('CN5.txt', 'w', encoding='utf-8') as CN5:
     CN5.write('\北京频道,#genre#\n')
     for line in file:
         if re.search(pattern, line):  # 如果行中有任意关键字
