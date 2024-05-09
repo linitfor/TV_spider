@@ -61,9 +61,106 @@ for file_path in file_paths:
     with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
         file_contents.append(content)
+        
 # 生成合并后的文件
-with open("CN.txt", "w", encoding="utf-8") as output:
+with open("CN_temp.txt", "w", encoding="utf-8") as output:
     output.write('\n'.join(file_contents))
+
+import re
+
+# 读取要替换的文本
+replacements = {
+        '中央': 'CCTV',
+        '高清': '',
+        'HD': '',
+        '标清': '',
+        '超高': '',
+        '频道': '',
+        '-': '',
+        ' ': '',
+        'PLUS': '+',
+        '＋': '+',
+        '(': '',
+        ')': '',
+        'L': '',
+        'CMIPTV': '',
+        'cctv': 'CCTV',
+        'CCTV1综合': 'CCTV1',
+        'CCTV2财经': 'CCTV2',
+        'CCTV3综艺': 'CCTV3',
+        'CCTV4国际': 'CCTV4',
+        'CCTV4中文国际': 'CCTV4',
+        'CCTV4欧洲': 'CCTV4',
+        'CCTV5体育': 'CCTV5',
+        'CCTV5+体育': 'CCTV5+',
+        'CCTV6电影': 'CCTV6',
+        'CCTV7军事': 'CCTV7',
+        'CCTV7军农': 'CCTV7',
+        'CCTV7农业': 'CCTV7',
+        'CCTV7国防军事': 'CCTV7',
+        'CCTV8电视剧': 'CCTV8',
+        'CCTV8纪录': 'CCTV9',
+        'CCTV9记录': 'CCTV9',
+        'CCTV9纪录': 'CCTV9',
+        'CCTV10科教': 'CCTV10',
+        'CCTV11戏曲': 'CCTV11',
+        'CCTV12社会与法': 'CCTV12',
+        'CCTV13新闻': 'CCTV13',
+        'CCTV新闻': 'CCTV13',
+        'CCTV14少儿': 'CCTV14',
+        '央视14少儿': 'CCTV14',
+        'CCTV少儿超': 'CCTV14',
+        'CCTV15音乐': 'CCTV15',
+        'CCTV音乐': 'CCTV15',
+        'CCTV16奥林匹克': 'CCTV16',
+        'CCTV17农业农村': 'CCTV17',
+        'CCTV17军农': 'CCTV17',
+        'CCTV17农业': 'CCTV17',
+        'CCTV5+体育赛视': 'CCTV5+',
+        'CCTV5+赛视': 'CCTV5+',
+        'CCTV5+体育赛事': 'CCTV5+',
+        'CCTV5+赛事': 'CCTV5+',
+        'CCTV5+体育': 'CCTV5+',
+        'CCTV5赛事': 'CCTV5+',
+        '凤凰中文台': '凤凰中文',
+        '凤凰卫视': '凤凰中文',
+        '凤凰资讯台': '凤凰资讯',
+        'CCTV4K测试': 'CCTV4',
+        'CCTV164K': 'CCTV16',
+        '上海东方卫视': '东方卫视',
+        '上海卫视': '东方卫视',
+        '内蒙卫视': '内蒙古卫视',
+        '福建东南卫视': '东南卫视',
+        '广东南方卫视': '南方卫视',
+        '金鹰卡通卫视': '金鹰卡通',
+        '湖南金鹰卡通': '金鹰卡通',
+        '炫动卡通': '哈哈炫动',
+        '卡酷卡通': '卡酷少儿',
+        '卡酷动画': '卡酷少儿',
+        'BRTVKAKU少儿': '卡酷少儿',
+        '优曼卡通': '优漫卡通',
+        '嘉佳卡通': '佳佳卡通',
+        '世界地理': '地理世界',
+        'CCTV世界地理': '地理世界',
+        'BTV文艺': '北京文艺',
+        'BTV影视': '北京影视',
+        'BTV科教': '北京科教',
+        'BTV财经': '北京财经',
+        'BTV生活': '北京生活',
+        'BTV新闻': '北京新闻',
+}
+
+# 读取要处理的文件
+with open("CN_temp.txt", "r", encoding="utf-8") as f:
+    text = f.read()
+
+# 进行批量替换
+for pattern, replacement in replacements.items():
+    text = re.sub(pattern, replacement, text)
+
+# 写入替换后的文本
+with open("CN.txt", "w", encoding="utf-8") as f:
+    f.write(text)
 
 
 #  获取远程港澳台直播源文件
@@ -658,6 +755,7 @@ os.remove("HK.txt")
 os.remove("TW.txt")
 os.remove("zb.txt")
 os.remove("CN.txt")
+os.remove("CN_temp.txt")
 os.remove("CN1.txt")
 os.remove("CN2.txt")
 os.remove("CN3.txt")
