@@ -78,7 +78,6 @@ replacements = {
         "频道":"",
         "-":"",
         "":"",
-        "\":"",
         "PLUS":"+",
         "＋":"+",
         "L":"",
@@ -153,12 +152,12 @@ replacements = {
         "BTV新闻":"北京新闻",
         "央视,#genre#":"央视频道,#genre#",
         "卫视,#genre#":"卫视频道,#genre#",
-        "\湖北,#genre#":"湖北频道,#genre#",
+        "\湖北,#genre#":"",
         "湖北电信,#genre#":"湖北频道,#genre#",
-        "\河南,#genre#":"河南频道,#genre#",
+        "\河南,#genre#":"",
         "河南电信,#genre#":"河南频道,#genre#",
         "河南联通,#genre#":"河南频道,#genre#",
-        "\北京,#genre#":"北京频道,#genre#",
+        "\北京,#genre#":"",
         "北京联通,#genre#":"北京频道,#genre#",
 }
 
