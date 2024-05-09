@@ -250,6 +250,10 @@ with open("sport.txt", "w", encoding="utf-8") as output_file:
 
 
 # 扫源湖北IPTV
+
+# 线程安全的队列，用于存储下载任务
+task_queue = Queue()
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
 
