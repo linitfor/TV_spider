@@ -66,8 +66,6 @@ for file_path in file_paths:
 with open("CN_temp.txt", "w", encoding="utf-8") as output:
     output.write('\n'.join(file_contents))
 
-import re
-
 # 读取要替换的文本
 replacements = {
         "中央":"CCTV",
@@ -251,7 +249,7 @@ with open("sport.txt", "w", encoding="utf-8") as output_file:
         for link in links:
             output_file.write(f"{link}\n")
 
-# 扫源IPTV
+# 扫源
 urls = [
     # "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0iSGViZWki",                # 河 北
     "https://fofa.info/result?qbase64=ImlwdHYvbGl2ZS96aF9jbi5qcyIgJiYgY291bnRyeT0iQ04iICYmIHJlZ2lvbj0iYmVpamluZyI%3D",          # 北 京
@@ -740,9 +738,215 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
                         
+
+# 扫源湖北IPTV
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
+
+urls = ["wuhan","huangshi","shiyan","yichang","xiangyang","ezhou","jingmen","xiaogan","jingzhou","huanggang","xianning","suizhou"]
+channelsx = [
+    "湖北公共新闻,http://8.8.8.8:8/rtp/239.69.1.40:9880","湖北经视,http://8.8.8.8:8/rtp/239.69.1.41:9886","湖北综合,http://8.8.8.8:8/rtp/239.69.1.42:9892",
+"湖北垄上,http://8.8.8.8:8/rtp/239.69.1.43:9898","湖北影视,http://8.8.8.8:8/rtp/239.69.1.204:10866","湖北生活,http://8.8.8.8:8/rtp/239.69.1.205:10872",
+"湖北教育,http://8.8.8.8:8/rtp/239.69.1.206:10878","CCTV1,http://8.8.8.8:8/rtp/239.254.96.96:8550","CCTV2,http://8.8.8.8:8/rtp/239.69.1.102:10250",
+"CCTV3,http://8.8.8.8:8/rtp/239.69.1.122:10370","CCTV4,http://8.8.8.8:8/rtp/239.69.1.138:10466","CCTV5,http://8.8.8.8:8/rtp/239.69.1.123:10376",
+"CCTV5+,http://8.8.8.8:8/rtp/239.254.96.234:9484","CCTV6,http://8.8.8.8:8/rtp/239.69.1.124:10382","CCTV7,http://8.8.8.8:8/rtp/239.69.1.103:10256",
+"CCTV8,http://8.8.8.8:8/rtp/239.69.1.125:10388","CCTV9,http://8.8.8.8:8/rtp/239.69.1.104:10262","CCTV10,http://8.8.8.8:8/rtp/239.69.1.105:10268",
+"CCTV11,http://8.8.8.8:8/rtp/239.69.1.154:10560","CCTV12,http://8.8.8.8:8/rtp/239.69.1.106:10274","CCTV13,http://8.8.8.8:8/rtp/239.254.96.161:9040",
+"CCTV14,http://8.8.8.8:8/rtp/239.69.1.107:10280","CCTV15,http://8.8.8.8:8/rtp/239.69.1.155:10566","CCTV16,http://8.8.8.8:8/rtp/239.69.1.247:11124",
+"CCTV17,http://8.8.8.8:8/rtp/239.69.1.152:10548","CCTV第一剧场,http://8.8.8.8:8/rtp/239.69.1.74:10084","CCTV兵器科技,http://8.8.8.8:8/rtp/239.69.1.79:10114",
+"CCTV风云足球,http://8.8.8.8:8/rtp/239.69.1.81:10126","CCTV高尔夫网球,http://8.8.8.8:8/rtp/239.69.1.83:10138","CCTV世界地理,http://8.8.8.8:8/rtp/239.69.1.91:10186",
+"CCTV央视台球,http://8.8.8.8:8/rtp/239.69.1.98:10224","CCTV16奥林匹克-4K,http://8.8.8.8:8/rtp/239.69.1.249:11136","BestTV测试1-4K,http://8.8.8.8:8/rtp/239.69.1.26:9796",
+"BestTV测试2-4K,http://8.8.8.8:8/rtp/239.69.1.27:9802","BestTV测试3-4K,http://8.8.8.8:8/rtp/239.69.1.25:9790","爱上4K,http://8.8.8.8:8/rtp/239.69.1.141:10482",
+"湖北卫视,http://8.8.8.8:8/rtp/239.254.96.115:8664","河北卫视,http://8.8.8.8:8/rtp/239.254.96.113:9616","深圳卫视,http://8.8.8.8:8/rtp/239.254.96.137:8896",
+"黑龙江卫视,http://8.8.8.8:8/rtp/239.254.96.138:8902","湖南卫视,http://8.8.8.8:8/rtp/239.254.96.139:8908","广东卫视,http://8.8.8.8:8/rtp/239.254.96.140:8914",
+"北京卫视,http://8.8.8.8:8/rtp/239.254.96.141:8920","东方卫视,http://8.8.8.8:8/rtp/239.254.96.142:8926","浙江卫视,http://8.8.8.8:8/rtp/239.254.96.143:8932",
+"江苏卫视,http://8.8.8.8:8/rtp/239.254.96.144:8938","天津卫视,http://8.8.8.8:8/rtp/239.69.1.68:10048","山东卫视,http://8.8.8.8:8/rtp/239.69.1.69:10054",
+"安徽卫视,http://8.8.8.8:8/rtp/239.69.1.70:10060","辽宁卫视,http://8.8.8.8:8/rtp/239.69.1.71:10066","东南卫视,http://8.8.8.8:8/rtp/239.69.1.108:10286",
+"江西卫视,http://8.8.8.8:8/rtp/239.69.1.126:10394","重庆卫视,http://8.8.8.8:8/rtp/239.69.1.149:10530","贵州卫视,http://8.8.8.8:8/rtp/239.69.1.150:10536",
+"海南卫视,http://8.8.8.8:8/rtp/239.69.1.151:10542","河南卫视,http://8.8.8.8:8/rtp/239.69.1.168:10644","四川卫视,http://8.8.8.8:8/rtp/239.69.1.169:10650",
+"广西卫视,http://8.8.8.8:8/rtp/239.69.1.191:10788","吉林卫视,http://8.8.8.8:8/rtp/239.69.1.212:10914","CHC-高清电影,http://8.8.8.8:8/rtp/239.69.1.241:11088",
+"CHC-动作电影,http://8.8.8.8:8/rtp/239.69.1.242:11094","CHC-家庭影院,http://8.8.8.8:8/rtp/239.69.1.243:11100","武汉一台新闻综合,http://8.8.8.8:8/rtp/239.69.1.145:10506",
+"武汉二台电视剧,http://8.8.8.8:8/rtp/239.69.1.146:10512","武汉三台科技生活,http://8.8.8.8:8/rtp/239.69.1.251:11148","武汉四台经济,http://8.8.8.8:8/rtp/239.69.1.35:9850",
+"武汉五台文体,http://8.8.8.8:8/rtp/239.69.1.147:10518","武汉六台外语,http://8.8.8.8:8/rtp/239.69.1.36:9856","武汉教育,http://8.8.8.8:8/rtp/239.69.1.60:9994",
+"蔡甸综合,http://8.8.8.8:8/rtp/239.69.1.245:11112","阳新综合,http://8.8.8.8:8/rtp/239.69.1.34:9844","房县综合,http://8.8.8.8:8/rtp/239.69.1.192:10794",
+"卡酷少儿,http://8.8.8.8:8/rtp/239.69.1.193:10800","梨园频道,http://8.8.8.8:8/rtp/239.69.1.33:9838","武术世界,http://8.8.8.8:8/rtp/239.69.1.47:9922",
+"快乐垂钓,http://8.8.8.8:8/rtp/239.69.1.142:10488","茶频道,http://8.8.8.8:8/rtp/239.69.1.144:10500","金鹰卡通,http://8.8.8.8:8/rtp/239.69.1.248:11130",
+"金鹰纪实,http://8.8.8.8:8/rtp/239.69.1.109:10292","CETV1,http://8.8.8.8:8/rtp/239.69.1.110:10298","CCTV5+,http://8.8.8.8:8/rtp/239.69.1.12:9712",
+"河北卫视,http://8.8.8.8:8/rtp/239.69.1.157:10578","东方卫视,http://8.8.8.8:8/rtp/239.69.1.173:10674","江苏卫视,http://8.8.8.8:8/rtp/239.69.1.174:10680",
+"CCTV16-4K,http://8.8.8.8:8/rtp/239.69.1.13:9718",
+]
+
+
+results = []
+channel = []
+urls_all = []
+resultsx = []
+resultxs = []
+error_channels = []
+
+for url in urls:
+    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && org="Chinanet"').encode("utf-8")), "utf-8")
+    url_64 = f'https://fofa.info/result?qbase64={url_0}'
+    print(url_64)
+    try:
+        response = requests.get(url_64, headers=headers, timeout=15)
+        page_content = response.text
+        print(f" {url}  访问成功")
+        pattern = r'href="(http://\d+\.\d+\.\d+\.\d+:\d+)"'
+        page_urls = re.findall(pattern, page_content)
+        for urlx in page_urls:
+            try:
+                response = requests.get(url=urlx + '/status', timeout=1)
+                response.raise_for_status()  # 返回状态码不是200异常
+                page_content = response.text
+                pattern = r'class="proctabl"'
+                page_proctabl = re.findall(pattern, page_content)
+                if page_proctabl:
+                    urls_all.append(urlx)
+                    print(f"{urlx} 可以访问")
+
+            except requests.RequestException as e:
+                pass
+    except:
+        print(f"{url_64} 访问失败")
+        pass
+
+urls_all = set(urls_all)  # 去重得到唯一的URL列表
+for urlx in urls_all:
+    channel = [f'{name},{url.replace("http://8.8.8.8:8", urlx)}' for name, url in
+               [line.strip().split(',') for line in channelsx]]
+    results.extend(channel)
+            
+results = sorted(results)
+# with open("itv.txt", 'w', encoding='utf-8') as file:
+#     for result in results:
+#         file.write(result + "\n")
+#         print(result)
+
+# 定义工作线程函数
+def worker():
+    while True:
+        result = task_queue.get()
+        channel_name, channel_url = result.split(',', 1)
+        try:
+            response = requests.get(channel_url, stream=True, timeout=3)
+            if response.status_code == 200:
+                result = channel_name, channel_url
+                resultsx.append(result)
+                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
+                print(
+                    f"可用频道：{len(resultsx)} , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
+            else:
+                error_channels.append(result)
+                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
+                print(
+                    f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
+        except:
+            error_channels.append(result)
+            numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
+            print(
+                f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
+
+        # 标记任务完成
+        task_queue.task_done()
+
+
+# 创建多个工作线程
+num_threads = 20
+for _ in range(num_threads):
+    t = threading.Thread(target=worker, daemon=True)
+    t.start()
+
+# 添加下载任务到队列
+for result in results:
+    task_queue.put(result)
+
+# 等待所有任务完成
+task_queue.join()
+
+
+def channel_key(channel_name):
+    match = re.search(r'\d+', channel_name)
+    if match:
+        return int(match.group())
+    else:
+        return float('inf')  # 返回一个无穷大的数字作为关键字
+
+
+for resulta in resultsx:
+    channel_name, channel_url = resulta
+    resultx = channel_name, channel_url
+    resultxs.append(resultx)
+
+# 对频道进行排序
+resultxs.sort(key=lambda x: channel_key(x[0]))
+# now_today = datetime.date.today()
+
+result_counter = 20  # 每个频道需要的个数
+
+with open("itv.txt", 'w', encoding='utf-8') as file:
+    channel_counters = {}
+    file.write('央视频道,#genre#\n')
+    for result in resultxs:
+        channel_name, channel_url = result
+        if 'CCTV' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+    channel_counters = {}
+    file.write('\n卫视频道,#genre#\n')
+    for result in resultxs:
+        channel_name, channel_url = result
+        if '卫视' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+    channel_counters = {}
+    file.write('\n湖北频道,#genre#\n')
+    for result in resultxs:
+        channel_name, channel_url = result
+        if '湖北' in channel_name or '武汉' in channel_name or '宜昌' in channel_name or '黄石' in channel_name or '十堰' \
+                in channel_name or '荆门' in channel_name or '荆州' in channel_name or '随州' in channel_name or '襄阳' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+    file.write('其他频道,#genre#\n')
+    for resultx in resultxs:
+        channel_name, channel_url = resultx
+        if 'CCTV' not in channel_name and '卫视' not in channel_name and '湖北' not in channel_name and '武汉' not channel_name and '宜昌' not channel_name and '黄石' not channel_name and '十堰' \
+              not in channel_name and '荆门' not in channel_name and '荆州' not in channel_name and '随州' not in channel_name and '襄阳' not in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+
+
 # 合并自定义频道文件内容
 file_contents = []
-file_paths = ["CN.txt","hb.txt","GAT.txt","gat2.txt","sport.txt"]  # 替换为实际的文件路径列表
+file_paths = ["CN.txt","hb.txt","itv.txt","GAT.txt","gat2.txt","sport.txt"]  # 替换为实际的文件路径列表
 for file_path in file_paths:
     with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
@@ -758,6 +962,7 @@ with open("iptv_list.txt", "w", encoding="utf-8") as output:
     output.write(f"{now.strftime("%Y-%m-%d")},url\n")
     output.write(f"{now.strftime("%H:%M:%S")},url\n")
 
+os.remove("itv.txt")
 os.remove("iptv.txt")
 os.remove("hb.txt")
 os.remove("GAT.txt")
