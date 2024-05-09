@@ -9,6 +9,62 @@ import threading
 from queue import Queue
 from datetime import datetime
 
+#  获取远程国内直播源文件
+url = "https://lisa3456.github.io/zb.txt"
+r = requests.get(url)
+open('zb.txt', 'wb').write(r.content)
+
+keywords = ['CCTV', 'CGTN']  # 需要提取的关键字列表
+pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
+with open('zb.txt', 'r', encoding='utf-8') as file, open('CN1.txt', 'w', encoding='utf-8') as CN1:
+    CN1.write('\n央视频道,#genre#\n')
+    for line in file:
+        if re.search(pattern, line):  # 如果行中有任意关键字
+            CN1.write(line)  # 将该行写入输出文件
+
+keywords = ['卫视']  # 需要提取的关键字列表
+pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
+with open('zb.txt', 'r', encoding='utf-8') as file, open('CN2.txt', 'w', encoding='utf-8') as CN2:
+    CN2.write('\n卫视频道,#genre#\n')
+    for line in file:
+        if re.search(pattern, line):  # 如果行中有任意关键字
+            CN2.write(line)  # 将该行写入输出文件
+
+keywords = ['湖北', '武汉']  # 需要提取的关键字列表
+pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
+with open('zb', 'r', encoding='utf-8') as file, open('CN3.txt', 'w', encoding='utf-8') as CN3:
+    CN3.write('\湖北频道,#genre#\n')
+    for line in file:
+        if re.search(pattern, line):  # 如果行中有任意关键字
+            CN3.write(line)  # 将该行写入输出文件
+
+keywords = ['河南', '郑州']  # 需要提取的关键字列表
+pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
+with open('zb', 'r', encoding='utf-8') as file, open('CN4.txt', 'w', encoding='utf-8') as CN4:
+    CN4.write('\河南频道,#genre#\n')
+    for line in file:
+        if re.search(pattern, line):  # 如果行中有任意关键字
+            CN4.write(line)  # 将该行写入输出文件
+
+keywords = ['北京']  # 需要提取的关键字列表
+pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
+with open('zb', 'r', encoding='utf-8') as file, open('CN4.txt', 'w', encoding='utf-8') as CN5:
+    CN5.write('\北京频道,#genre#\n')
+    for line in file:
+        if re.search(pattern, line):  # 如果行中有任意关键字
+            CN5.write(line)  # 将该行写入输出文件
+
+# 读取要合并的频道文件
+file_contents = []
+file_paths = ["CN1.txt", "CN2.txt", "CN3.txt", "CN4.txt", "CN5.txt"]  # 替换为实际的文件路径列表
+for file_path in file_paths:
+    with open(file_path, 'r', encoding="utf-8") as file:
+        content = file.read()
+        file_contents.append(content)
+# 生成合并后的文件
+with open("CN.txt", "w", encoding="utf-8") as output:
+    output.write('\n'.join(file_contents))
+
 
 #  获取远程港澳台直播源文件
 url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Fairy8o/IPTV/main/DIYP-v4.txt"
@@ -578,7 +634,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
                         
 # 合并自定义频道文件内容
 file_contents = []
-file_paths = ["hb.txt","GAT.txt","gat2.txt","sport.txt"]  # 替换为实际的文件路径列表
+file_paths = ["CN.txt""hb.txt","GAT.txt","gat2.txt","sport.txt"]  # 替换为实际的文件路径列表
 for file_path in file_paths:
     with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
@@ -595,11 +651,18 @@ with open("iptv_list.txt", "w", encoding="utf-8") as output:
     output.write(f"{now.strftime("%H:%M:%S")},url\n")
 
 os.remove("iptv.txt")
-os.remove("GAT.txt")
 os.remove("hb.txt")
+os.remove("GAT.txt")
 os.remove("DIYP-v4.txt")
 os.remove("HK.txt")
 os.remove("TW.txt")
+os.remove("zb.txt")
+os.remove("CN.txt")
+os.remove("CN1.txt")
+os.remove("CN2.txt")
+os.remove("CN3.txt")
+os.remove("CN4.txt")
+os.remove("CN5.txt")
 os.remove("sport.txt")
 
 def txt_to_m3u(input_file, output_file):
