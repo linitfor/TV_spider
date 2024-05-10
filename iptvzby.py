@@ -1160,19 +1160,15 @@ with open("ph.txt", 'w', encoding='utf-8') as file:
                 channel_counters[channel_name] = 1
 
 
-# 合并自定义频道文件内容
-file_contents = []
+file_contents = []  # 使用列表来存储内容
 file_paths = ["hb.txt","he.txt","bj.txt","hn.txt","ph.txt","GAT.txt","gat2.txt","sport.txt"]  # 替换为实际的文件路径列表
 for file_path in file_paths:
     with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
-        file_contents.append(content)
-                
-# 合并所有文件内容为一个字符串
-all_contents = ''.join(file_contents)
+        file_contents.extend(content.splitlines())  # 将文件内容按行分割，然后添加到列表中
 
-# 按行分割并使用集合去重
-unique_lines = set(all_contents.split('\n'))
+# 使用字典去重，同时保持原始顺序
+file_contents = list(dict.fromkeys(file_contents))
 
 # 写入合并后的文件
 with open("iptv_list.txt", "w", encoding="utf-8") as output:
