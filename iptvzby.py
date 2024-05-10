@@ -1159,6 +1159,29 @@ with open("ph.txt", 'w', encoding='utf-8') as file:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
 
+# 定义合并频道函数
+def merge_channels(file_name):
+    with open(file_name, 'r', encoding="utf-8") as f:
+        lines = f.readlines()
+
+    channels = {}
+    current_channel = None
+
+    for line in lines:
+        line = line.strip()
+        if line.endswith('#genre#'):
+            current_channel = line
+            if current_channel not in channels:
+                channels[current_channel] = []
+        else:
+            channels[current_channel].append(line)
+
+    with open(file_name, 'w', encoding="utf-8") as f:
+        for channel, urls in channels.items():
+            f.write(channel + '\n')
+            for url in urls:
+                f.write(url + '\n')
+
 # 合并自定义频道文件内容
 file_contents = []
 file_paths = ["hb.txt","he.txt","bj.txt","hn.txt","ph.txt","GAT.txt","gat2.txt","sport.txt"]  # 替换为实际的文件路径列表
@@ -1170,6 +1193,9 @@ for file_path in file_paths:
 # 写入合并后的文件
 with open("iptv_list.txt", "w", encoding="utf-8") as output:
     output.write('\n'.join(file_contents))
+
+# 在合并后的文件中进一步合并相同的频道
+merge_channels('iptv_list.txt')
 
 # 写入更新日期时间
     now = datetime.now()
