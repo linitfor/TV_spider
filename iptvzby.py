@@ -8,168 +8,6 @@ import threading
 from queue import Queue
 from datetime import datetime
 
-#  获取远程国内直播源文件
-url = "https://lisa3456.github.io/zb.txt"
-r = requests.get(url)
-open('zb.txt', 'wb').write(r.content)
-
-keywords = ['CCTV', 'CGTN']  # 需要提取的关键字列表
-pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
-with open('zb.txt', 'r', encoding='utf-8') as file, open('CN1.txt', 'w', encoding='utf-8') as CN1:
-    CN1.write('\n央视频道,#genre#\n')
-    for line in file:
-        if re.search(pattern, line):  # 如果行中有任意关键字
-            CN1.write(line)  # 将该行写入输出文件
-
-keywords = ['卫视']  # 需要提取的关键字列表
-pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
-with open('zb.txt', 'r', encoding='utf-8') as file, open('CN2.txt', 'w', encoding='utf-8') as CN2:
-    CN2.write('\n卫视频道,#genre#\n')
-    for line in file:
-        if re.search(pattern, line):  # 如果行中有任意关键字
-            CN2.write(line)  # 将该行写入输出文件
-
-keywords = ['湖北', '武汉']  # 需要提取的关键字列表
-pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
-with open('zb.txt', 'r', encoding='utf-8') as file, open('CN3.txt', 'w', encoding='utf-8') as CN3:
-    CN3.write('\湖北频道,#genre#\n')
-    for line in file:
-        if re.search(pattern, line):  # 如果行中有任意关键字
-            CN3.write(line)  # 将该行写入输出文件
-
-keywords = ['河南', '郑州']  # 需要提取的关键字列表
-pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
-with open('zb.txt', 'r', encoding='utf-8') as file, open('CN4.txt', 'w', encoding='utf-8') as CN4:
-    CN4.write('\河南频道,#genre#\n')
-    for line in file:
-        if re.search(pattern, line):  # 如果行中有任意关键字
-            CN4.write(line)  # 将该行写入输出文件
-
-keywords = ['北京']  # 需要提取的关键字列表
-pattern = '|'.join(keywords)  # 创建正则表达式模式，匹配任意一个关键字
-with open('zb.txt', 'r', encoding='utf-8') as file, open('CN5.txt', 'w', encoding='utf-8') as CN5:
-    CN5.write('\北京频道,#genre#\n')
-    for line in file:
-        if re.search(pattern, line):  # 如果行中有任意关键字
-            CN5.write(line)  # 将该行写入输出文件
-
-# 读取要合并的频道文件
-file_contents = []
-file_paths = ["CN1.txt", "CN2.txt", "CN3.txt", "CN4.txt", "CN5.txt"]  # 替换为实际的文件路径列表
-for file_path in file_paths:
-    with open(file_path, 'r', encoding="utf-8") as file:
-        content = file.read()
-        file_contents.append(content)
-        
-# 生成合并后的文件
-with open("CN_temp.txt", "w", encoding="utf-8") as output:
-    output.write('\n'.join(file_contents))
-
-# 读取要替换的文本
-replacements = {
-        "中央":"CCTV",
-        "高清":"",
-        "HD":"",
-        "标清":"",
-        "超高":"",
-        "频道":"",
-        "-":"",
-        "":"",
-        "PLUS":"+",
-        "＋":"+",
-        "L":"",
-        "CMIPTV":"",
-        "cctv":"CCTV",
-        "CCTV1综合":"CCTV1",
-        "CCTV2财经":"CCTV2",
-        "CCTV3综艺":"CCTV3",
-        "CCTV4国际":"CCTV4",
-        "CCTV4中文国际":"CCTV4",
-        "CCTV4欧洲":"CCTV4",
-        "CCTV5体育":"CCTV5",
-        "CCTV5+体育":"CCTV5+",
-        "CCTV6电影":"CCTV6",
-        "CCTV7军事":"CCTV7",
-        "CCTV7军农":"CCTV7",
-        "CCTV7农业":"CCTV7",
-        "CCTV7国防军事":"CCTV7",
-        "CCTV8电视剧":"CCTV8",
-        "CCTV8纪录":"CCTV9",
-        "CCTV9记录":"CCTV9",
-        "CCTV9纪录":"CCTV9",
-        "CCTV10科教":"CCTV10",
-        "CCTV11戏曲":"CCTV11",
-        "CCTV12社会与法":"CCTV12",
-        "CCTV13新闻":"CCTV13",
-        "CCTV新闻":"CCTV13",
-        "CCTV14少儿":"CCTV14",
-        "央视14少儿":"CCTV14",
-        "CCTV少儿超":"CCTV14",
-        "CCTV15音乐":"CCTV15",
-        "CCTV音乐":"CCTV15",
-        "CCTV16奥林匹克":"CCTV16",
-        "CCTV17农业农村":"CCTV17",
-        "CCTV17军农":"CCTV17",
-        "CCTV17农业":"CCTV17",
-        "CCTV5+体育赛视":"CCTV5+",
-        "CCTV5+赛视":"CCTV5+",
-        "CCTV5+体育赛事":"CCTV5+",
-        "CCTV5+赛事":"CCTV5+",
-        "CCTV5+体育":"CCTV5+",
-        "CCTV5赛事":"CCTV5+",
-        "CCTV4K测试":"CCTV4",
-        "CCTV164K":"CCTV16",
-        "凤凰中文台":"凤凰中文",
-        "凤凰卫视":"凤凰中文",
-        "凤凰资讯台":"凤凰资讯",
-        "凤凰卫视中文":"凤凰中文",
-        "凤凰卫视资讯":"凤凰资讯",
-        "凤凰卫视中文台":"凤凰中文",
-        "凤凰卫视资讯台":"凤凰资讯",
-        "上海东方卫视":"东方卫视",
-        "上海卫视":"东方卫视",
-        "内蒙卫视":"内蒙古卫视",
-        "福建东南卫视":"东南卫视",
-        "广东南方卫视":"南方卫视",
-        "金鹰卡通卫视":"金鹰卡通",
-        "湖南金鹰卡通":"金鹰卡通",
-        "炫动卡通":"哈哈炫动",
-        "卡酷卡通":"卡酷少儿",
-        "卡酷动画":"卡酷少儿",
-        "BRTVKAKU少儿":"卡酷少儿",
-        "优曼卡通":"优漫卡通",
-        "嘉佳卡通":"佳佳卡通",
-        "世界地理":"地理世界",
-        "CCTV世界地理":"地理世界",
-        "BTV文艺":"北京文艺",
-        "BTV影视":"北京影视",
-        "BTV科教":"北京科教",
-        "BTV财经":"北京财经",
-        "BTV生活":"北京生活",
-        "BTV新闻":"北京新闻",
-        "央视,#genre#":"央视频道,#genre#",
-        "卫视,#genre#":"卫视频道,#genre#",
-        "\湖北,#genre#":"",
-        "湖北电信,#genre#":"湖北频道,#genre#",
-        "\河南,#genre#":"",
-        "河南电信,#genre#":"河南频道,#genre#",
-        "河南联通,#genre#":"河南频道,#genre#",
-        "\北京,#genre#":"",
-        "北京联通,#genre#":"北京频道,#genre#",
-}
-
-# 读取要处理的文件
-with open("CN_temp.txt", "r", encoding="utf-8") as f:
-    text = f.read()
-
-# 进行批量替换
-for pattern, replacement in replacements.items():
-    text = re.sub(pattern, replacement, text)
-
-# 写入替换后的文本
-with open("CN.txt", "w", encoding="utf-8") as f:
-    f.write(text)
-
 
 #  获取远程港澳台直播源文件
 url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Fairy8o/IPTV/main/DIYP-v4.txt"
@@ -403,7 +241,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     file.write('央视频道,#genre#\n')
     for result in resultxs:
         channel_name, channel_url = result
-        if 'CCTV' in channel_name:
+        if 'CCTV' in channel_name or 'CGTN' in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
@@ -445,7 +283,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     file.write('其他频道,#genre#\n')
     for resultx in resultxs:
         channel_name, channel_url = resultx
-        if 'CCTV' not in channel_name and '卫视' not in channel_name and '湖北' not in channel_name and '武汉' not in channel_name and '宜昌' not in channel_name and '黄石' not in channel_name and '十堰' \
+        if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '湖北' not in channel_name and '武汉' not in channel_name and '宜昌' not in channel_name and '黄石' not in channel_name and '十堰' \
               not in channel_name and '荆门' not in channel_name and '荆州' not in channel_name and '随州' not in channel_name and '襄阳' not in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
@@ -610,7 +448,7 @@ with open("he.txt", 'w', encoding='utf-8') as file:
     file.write('央视频道,#genre#\n')
     for result in resultxs:
         channel_name, channel_url = result
-        if 'CCTV' in channel_name:
+        if 'CCTV' in channel_name or 'CGTN' in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
@@ -652,7 +490,7 @@ with open("he.txt", 'w', encoding='utf-8') as file:
     file.write('其他频道,#genre#\n')
     for resultx in resultxs:
         channel_name, channel_url = resultx
-        if 'CCTV' not in channel_name and '卫视' not in channel_name and '河南' not in channel_name and '郑州' not in channel_name and '中原' not in channel_name and '新郑' not in channel_name and '新密' \
+        if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '河南' not in channel_name and '郑州' not in channel_name and '中原' not in channel_name and '新郑' not in channel_name and '新密' \
               not in channel_name and '中牟' not in channel_name and '巩义' not in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
@@ -663,6 +501,211 @@ with open("he.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
+
+# 扫源北京联通IPTV
+
+# 线程安全的队列，用于存储下载任务
+task_queue = Queue()
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
+
+urls = ["beijing"]
+channelsx = [
+    "CCTV1,http://8.8.8.8:8/rtp/239.3.1.129:8008","CCTV2,http://8.8.8.8:8/rtp/239.3.1.60:8084","CCTV3,http://8.8.8.8:8/rtp/239.3.1.172:8001",
+    "CCTV4,http://8.8.8.8:8/rtp/239.3.1.105:8092","CCTV4（4K）,http://8.8.8.8:8/rtp/239.3.1.245:2000","CCTV4 欧洲,http://8.8.8.8:8/rtp/239.3.1.213:4220",
+    "CCTV4 美洲,http://8.8.8.8:8/rtp/239.3.1.214:4220","CCTV5,http://8.8.8.8:8/rtp/239.3.1.173:8001","CCTV5+,http://8.8.8.8:8/rtp/239.3.1.130:8004",
+    "CCTV6,http://8.8.8.8:8/rtp/239.3.1.174:8001","CCTV7,http://8.8.8.8:8/rtp/239.3.1.61:8104","CCTV8,http://8.8.8.8:8/rtp/239.3.1.175:8001",
+    "CCTV9,http://8.8.8.8:8/rtp/239.3.1.62:8112","CCTV10,http://8.8.8.8:8/rtp/239.3.1.63:8116","CCTV11,http://8.8.8.8:8/rtp/239.3.1.152:8120",
+    "CCTV12,http://8.8.8.8:8/rtp/239.3.1.64:8124","CCTV13,http://8.8.8.8:8/rtp/239.3.1.124:8128","CCTV14,http://8.8.8.8:8/rtp/239.3.1.65:8132",
+    "CCTV15,http://8.8.8.8:8/rtp/239.3.1.153:8136","CCTV16,http://8.8.8.8:8/rtp/239.3.1.184:8001","CCTV17,http://8.8.8.8:8/rtp/239.3.1.151:8144",
+    "CCTV16[4K]1,http://8.8.8.8:8/rtp/239.3.1.97:8001","CCTV16[4K]2,http://8.8.8.8:8/rtp/239.3.1.183:8001","北京卫视,http://8.8.8.8:8/rtp/239.3.1.241:8000",
+    "北京文艺,http://8.8.8.8:8/rtp/239.3.1.242:8000","北京科教,http://8.8.8.8:8/rtp/239.3.1.227:8000","北京影视,http://8.8.8.8:8/rtp/239.3.1.158:8000",
+    "北京生活,http://8.8.8.8:8/rtp/239.3.1.231:8000","北京财经,http://8.8.8.8:8/rtp/239.3.1.229:8000","北京青年,http://8.8.8.8:8/rtp/239.3.1.232:8000",
+    "北京新闻,http://8.8.8.8:8/rtp/239.3.1.159:8000","北京卡酷动画,http://8.8.8.8:8/rtp/239.3.1.189:8000","北京冬奥纪实,http://8.8.8.8:8/rtp/239.3.1.243:8000",
+    "北京国际频道,http://8.8.8.8:8/rtp/239.3.1.235:8000","湖南卫视,http://8.8.8.8:8/rtp/239.3.1.132:8012","浙江卫视,http://8.8.8.8:8/rtp/239.3.1.137:8036",
+    "江苏卫视,http://8.8.8.8:8/rtp/239.3.1.135:8028","东方卫视,http://8.8.8.8:8/rtp/239.3.1.136:8032","山东卫视,http://8.8.8.8:8/rtp/239.3.1.209:8052",
+    "安徽卫视,http://8.8.8.8:8/rtp/239.3.1.211:8064","湖北卫视,http://8.8.8.8:8/rtp/239.3.1.138:8044","东南卫视,http://8.8.8.8:8/rtp/239.3.1.156:8148",
+    "广东卫视,http://8.8.8.8:8/rtp/239.3.1.142:8048","辽宁卫视,http://8.8.8.8:8/rtp/239.3.1.210:8056","黑龙江卫视,http://8.8.8.8:8/rtp/239.3.1.133:8016",
+    "深圳卫视,http://8.8.8.8:8/rtp/239.3.1.134:8020","贵州卫视,http://8.8.8.8:8/rtp/239.3.1.149:8076","天津卫视,http://8.8.8.8:8/rtp/239.3.1.141:1234",
+    "河北卫视,http://8.8.8.8:8/rtp/239.3.1.148:8072","重庆卫视,http://8.8.8.8:8/rtp/239.3.1.122:8160","江西卫视,http://8.8.8.8:8/rtp/239.3.1.123:8164",
+    "吉林卫视,http://8.8.8.8:8/rtp/239.3.1.240:8172","南方卫视,http://8.8.8.8:8/rtp/239.3.1.161:8001","广西卫视,http://8.8.8.8:8/rtp/239.3.1.39:8300",
+    "海南卫视,http://8.8.8.8:8/rtp/239.3.1.45:8304","厦门卫视,http://8.8.8.8:8/rtp/239.3.1.143:4120","云南卫视,http://8.8.8.8:8/rtp/239.3.1.26:8108",
+    "西藏卫视,http://8.8.8.8:8/rtp/239.3.1.47:8164","四川卫视,http://8.8.8.8:8/rtp/239.3.1.29:8288","河南卫视,http://8.8.8.8:8/rtp/239.3.1.27:8128",
+    "陕西卫视,http://8.8.8.8:8/rtp/239.3.1.41:8140","新疆卫视,http://8.8.8.8:8/rtp/239.3.1.48:8160","宁夏卫视,http://8.8.8.8:8/rtp/239.3.1.46:8124",
+    "青海卫视,http://8.8.8.8:8/rtp/239.3.1.44:8184","甘肃卫视,http://8.8.8.8:8/rtp/239.3.1.49:8188","山西卫视,http://8.8.8.8:8/rtp/239.3.1.42:8172",
+    "内蒙古卫视,http://8.8.8.8:8/rtp/239.3.1.43:8176","三沙卫视,http://8.8.8.8:8/rtp/239.3.1.155:4120","兵团卫视,http://8.8.8.8:8/rtp/239.3.1.144:4120",
+    "山东教育,http://8.8.8.8:8/rtp/239.3.1.52:4120","中国教育1台,http://8.8.8.8:8/rtp/239.3.1.57:8152","中国教育2台,http://8.8.8.8:8/rtp/239.3.1.54:4120",
+    "中国教育3台,http://8.8.8.8:8/rtp/239.3.1.55:4120","中国教育4台,http://8.8.8.8:8/rtp/239.3.1.56:4120","CGTN 新闻,http://8.8.8.8:8/rtp/239.3.1.215:4220",
+    "CGTN 记录,http://8.8.8.8:8/rtp/239.3.1.216:4220","CGTN 西班牙语,http://8.8.8.8:8/rtp/239.3.1.217:4220","CGTN 法语,http://8.8.8.8:8/rtp/239.3.1.218:4220",
+    "CGTN 阿拉伯语,http://8.8.8.8:8/rtp/239.3.1.219:4220","CGTN 俄语,http://8.8.8.8:8/rtp/239.3.1.220:4220",
+]
+
+
+results = []
+channel = []
+urls_all = []
+resultsx = []
+resultxs = []
+error_channels = []
+
+for url in urls:
+    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4837"').encode("utf-8")), "utf-8")
+    url_64 = f'https://fofa.info/result?qbase64={url_0}'
+    print(url_64)
+    try:
+        response = requests.get(url_64, headers=headers, timeout=15)
+        page_content = response.text
+        print(f" {url}  访问成功")
+        pattern = r'href="(http://\d+\.\d+\.\d+\.\d+:\d+)"'
+        page_urls = re.findall(pattern, page_content)
+        for urlx in page_urls:
+            try:
+                response = requests.get(url=urlx + '/status', timeout=1)
+                response.raise_for_status()  # 返回状态码不是200异常
+                page_content = response.text
+                pattern = r'class="proctabl"'
+                page_proctabl = re.findall(pattern, page_content)
+                if page_proctabl:
+                    urls_all.append(urlx)
+                    print(f"{urlx} 可以访问")
+
+            except requests.RequestException as e:
+                pass
+    except:
+        print(f"{url_64} 访问失败")
+        pass
+
+urls_all = set(urls_all)  # 去重得到唯一的URL列表
+for urlx in urls_all:
+    channel = [f'{name},{url.replace("http://8.8.8.8:8", urlx)}' for name, url in
+               [line.strip().split(',') for line in channelsx]]
+    results.extend(channel)
+            
+results = sorted(results)
+# with open("bj.txt", 'w', encoding='utf-8') as file:
+#     for result in results:
+#         file.write(result + "\n")
+#         print(result)
+
+# 定义工作线程函数
+def worker():
+    while True:
+        result = task_queue.get()
+        channel_name, channel_url = result.split(',', 1)
+        try:
+            response = requests.get(channel_url, stream=True, timeout=3)
+            if response.status_code == 200:
+                result = channel_name, channel_url
+                resultsx.append(result)
+                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
+                print(
+                    f"可用频道：{len(resultsx)} , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
+            else:
+                error_channels.append(result)
+                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
+                print(
+                    f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
+        except:
+            error_channels.append(result)
+            numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
+            print(
+                f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
+
+        # 标记任务完成
+        task_queue.task_done()
+
+
+# 创建多个工作线程
+num_threads = 20
+for _ in range(num_threads):
+    t = threading.Thread(target=worker, daemon=True)
+    t.start()
+
+# 添加下载任务到队列
+for result in results:
+    task_queue.put(result)
+
+# 等待所有任务完成
+task_queue.join()
+
+
+def channel_key(channel_name):
+    match = re.search(r'\d+', channel_name)
+    if match:
+        return int(match.group())
+    else:
+        return float('inf')  # 返回一个无穷大的数字作为关键字
+
+
+for resulta in resultsx:
+    channel_name, channel_url = resulta
+    resultx = channel_name, channel_url
+    resultxs.append(resultx)
+
+# 对频道进行排序
+resultxs.sort(key=lambda x: channel_key(x[0]))
+# now_today = datetime.date.today()
+
+result_counter = 20  # 每个频道需要的个数
+
+with open("bj.txt", 'w', encoding='utf-8') as file:
+    channel_counters = {}
+    file.write('央视频道,#genre#\n')
+    for result in resultxs:
+        channel_name, channel_url = result
+        if 'CCTV' in channel_name or 'CGTN' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+    channel_counters = {}
+    file.write('\n卫视频道,#genre#\n')
+    for result in resultxs:
+        channel_name, channel_url = result
+        if '卫视' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+    channel_counters = {}
+    file.write('\北京频道,#genre#\n')
+    for result in resultxs:
+        channel_name, channel_url = result
+        if '北京' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+    file.write('其他频道,#genre#\n')
+    for resultx in resultxs:
+        channel_name, channel_url = resultx
+        if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '北京' not in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1
+
 
 
 # 扫源湖南电信IPTV
@@ -931,7 +974,7 @@ with open("hn.txt", 'w', encoding='utf-8') as file:
     file.write('\n卫视频道,#genre#\n')
     for result in resultxs:
         channel_name, channel_url = result
-        if '卫视' in channel_name or '凤凰' in channel_name or 'CHC' in channel_name:
+        if '卫视' in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
@@ -941,6 +984,20 @@ with open("hn.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
+    channel_counters = {}
+    file.write('\n港澳频道,#genre#\n')
+    for result in resultxs:
+        channel_name, channel_url = result
+        if '凤凰' in channel_name:
+            if channel_name in channel_counters:
+                if channel_counters[channel_name] >= result_counter:
+                    continue
+                else:
+                    file.write(f"{channel_name},{channel_url}\n")
+                    channel_counters[channel_name] += 1
+            else:
+                file.write(f"{channel_name},{channel_url}\n")
+                channel_counters[channel_name] = 1            
     channel_counters = {}
     file.write('\n湖南频道,#genre#\n')
     for result in resultxs:
@@ -980,19 +1037,12 @@ with open("iptv_list.txt", "w", encoding="utf-8") as output:
 
 os.remove("hb.txt")
 os.remove("he.txt")
+os.remove("bj.txt")
 os.remove("hn.txt")
 os.remove("DIYP-v4.txt")
 os.remove("GAT.txt")
 os.remove("HK.txt")
 os.remove("TW.txt")
-os.remove("zb.txt")
-os.remove("CN.txt")
-os.remove("CN_temp.txt")
-os.remove("CN1.txt")
-os.remove("CN2.txt")
-os.remove("CN3.txt")
-os.remove("CN4.txt")
-os.remove("CN5.txt")
 os.remove("sport.txt")
 
 def txt_to_m3u(input_file, output_file):
