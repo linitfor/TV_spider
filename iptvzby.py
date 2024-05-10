@@ -303,7 +303,7 @@ task_queue = Queue()
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
 
-urls = ["zhengzhou","luoyang","kaifeng","xuchang","anyang","nanyang","xinxiang","zhoukou","zhumadian","puyang","xinyang","hebi","jiaozuo"]
+urls = ["zhengzhou","luoyang","kaifeng","xuchang","anyang","nanyang","xinxiang","zhoukou","zhumadian","luohe","puyang","xinyang","hebi","jiaozuo"]
 channelsx = [
     "CCTV1,http://8.8.8.8:8/rtp/225.1.4.73:1102","CCTV2,http://8.8.8.8:8/rtp/225.1.4.74:1103","CCTV3,http://8.8.8.8:8/rtp/225.1.4.158:1194",
     "CCTV4,http://8.8.8.8:8/rtp/225.1.5.30:1333","CCTV5,http://8.8.8.8:8/rtp/225.1.4.159:1195","CCTV6,http://8.8.8.8:8/rtp/225.1.4.160:1196",
@@ -826,18 +826,10 @@ urls = ["chengdu", "mianyang", "guangyuan", "deyang", "nanchong", "guangan", "su
     "hangzhou", "ningbo", "wenzhou", "jiaxing", "huzhou", "shaoxing", "jinhua", "quzhou", "zhoushan", "taizhou", "lishui",
     "fuzhou", "xiamen", "zhangzhou", "quanzhou", "sanming", "putian", "nanping", "longyan", "ningde"]
 channelsx = [
-        "凤凰中文,http://8.8.8.8:8/rtp/239.93.1.9:2192",
-    "凤凰资讯,http://8.8.8.8:8/rtp/239.93.1.4:2191",
-    "凤凰香港,http://8.8.8.8:8/udp/239.255.30.123:8231",
-    "凤凰中文,http://8.8.8.8:8/udp/239.255.30.50:8231",
-    "凤凰资讯,http://8.8.8.8:8/udp/239.255.30.70:8231",
-    "凤凰中文,http://8.8.8.8:8/udp/233.50.200.42:5140",
-    "凤凰中文,http://8.8.8.8:8/udp/233.50.200.191:5140",
-    "凤凰资讯,http://8.8.8.8:8/udp/233.50.200.192:5140",
-    "凤凰资讯,http://8.8.8.8:8/udp/239.76.246.8:1234",
-    "凤凰中文,http://8.8.8.8:8/udp/239.76.246.7:1234",
-    "凤凰资讯,http://8.8.8.8:8/rtp/239.61.2.183:9086",
-    "凤凰中文,http://8.8.8.8:8/rtp/239.61.2.184:9092",
+        "凤凰中文,http://8.8.8.8:8/rtp/239.93.1.9:2192","凤凰资讯,http://8.8.8.8:8/rtp/239.93.1.4:2191","凤凰香港,http://8.8.8.8:8/udp/239.255.30.123:8231",
+            "凤凰中文,http://8.8.8.8:8/udp/239.255.30.50:8231","凤凰资讯,http://8.8.8.8:8/udp/239.255.30.70:8231","凤凰中文,http://8.8.8.8:8/udp/233.50.200.42:5140",
+            "凤凰中文,http://8.8.8.8:8/udp/233.50.200.191:5140","凤凰资讯,http://8.8.8.8:8/udp/233.50.200.192:5140","凤凰资讯,http://8.8.8.8:8/udp/239.76.246.8:1234",
+            "凤凰中文,http://8.8.8.8:8/udp/239.76.246.7:1234","凤凰资讯,http://8.8.8.8:8/rtp/239.61.2.183:9086","凤凰中文,http://8.8.8.8:8/rtp/239.61.2.184:9092",
 ]
 
 
@@ -976,9 +968,7 @@ headers = {
 urls = ["chengdu", "mianyang", "guangyuan", "deyang", "nanchong", "guangan", "suining", "neijiang", "leshan", "zigong", "luzhou", "yibin", "panzhihua", "bazhong", "dazhou", "ziyang", "meishan", "yaan",
     "lanzhou", "jiayuguan", "jinchang", "baiyin", "tianshui", "wuwei", "zhangye", "pingliang", "jiuquan", "qingyang", "dingxi", "longnan",
     "hangzhou", "ningbo", "wenzhou", "jiaxing", "huzhou", "shaoxing", "jinhua", "quzhou", "zhoushan", "taizhou", "lishui",
-    "fuzhou", "xiamen", "zhangzhou", "quanzhou", "sanming", "putian", "nanping", "longyan", "ningde",
-    "tianjin",
-    "shanghai",
+    "fuzhou", "xiamen", "zhangzhou", "quanzhou", "sanming", "putian", "nanping", "longyan", "ningde","tianjin","shanghai",
     "shenyang", "dalian", "anshan", "fushun", "benxi", "dandong", "jinzhou", "yingkou", "fuxin", "liaoyang", "panjin", "tieling", "chaoyang", "huludao",
     "nanjing", "wuxi", "xuzhou", "changzhou", "suzhou", "nantong", "lianyungang", "huaian", "yancheng", "yangzhou", "zhenjiang", "taizhou", "suqian",
     "jinan", "qingdao", "zibo", "zaozhuang", "dongying", "yantai", "weifang", "jining", "taian", "weihai", "rizhao", "linyi", "dezhou", "liaocheng", "binzhou", "heze",
