@@ -1198,10 +1198,11 @@ with open("iptv_list.txt", "w", encoding="utf-8") as output:
 merge_channels('iptv_list.txt')
 
 # 写入更新日期时间
-now = datetime.now()
-output.write(f"更新时间,#genre#\n")
-output.write(f"{now.strftime("%Y-%m-%d")},url\n")
-output.write(f"{now.strftime("%H:%M:%S")},url\n")
+with open("iptv_list.txt", "a", encoding="utf-8") as output:  # 使用 "a" 模式以追加方式打开文件
+    now = datetime.now()  # 这一行的缩进应与上一行的 with 语句对齐
+    output.write(f"更新时间,#genre#\n")
+    output.write(f"{now.strftime('%Y-%m-%d')},url\n")
+    output.write(f"{now.strftime('%H:%M:%S')},url\n")
 
 os.remove("hb.txt")
 os.remove("he.txt")
