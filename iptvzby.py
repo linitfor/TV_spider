@@ -1198,10 +1198,10 @@ with open("iptv_list.txt", "w", encoding="utf-8") as output:
 merge_channels('iptv_list.txt')
 
 # 写入更新日期时间
-    now = datetime.now()
-    output.write(f"更新时间,#genre#\n")
-    output.write(f"{now.strftime("%Y-%m-%d")},url\n")
-    output.write(f"{now.strftime("%H:%M:%S")},url\n")
+now = datetime.now()
+output.write(f"更新时间,#genre#\n")
+output.write(f"{now.strftime("%Y-%m-%d")},url\n")
+output.write(f"{now.strftime("%H:%M:%S")},url\n")
 
 os.remove("hb.txt")
 os.remove("he.txt")
