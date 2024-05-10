@@ -280,7 +280,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
-    file.write('其他频道,#genre#\n')
+    file.write('\n其他频道,#genre#\n')
     for resultx in resultxs:
         channel_name, channel_url = resultx
         if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '湖北' not in channel_name and '武汉' not in channel_name and '宜昌' not in channel_name and '黄石' not in channel_name and '十堰' \
@@ -487,7 +487,7 @@ with open("he.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
-    file.write('其他频道,#genre#\n')
+    file.write('\n其他频道,#genre#\n')
     for resultx in resultxs:
         channel_name, channel_url = resultx
         if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '河南' not in channel_name and '郑州' not in channel_name and '中原' not in channel_name and '新郑' not in channel_name and '新密' \
@@ -692,7 +692,7 @@ with open("bj.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
-    file.write('其他频道,#genre#\n')
+    file.write('\n其他频道,#genre#\n')
     for resultx in resultxs:
         channel_name, channel_url = resultx
         if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '北京' not in channel_name:
@@ -1167,6 +1167,12 @@ for file_path in file_paths:
     with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
         file_contents.append(content)
+                
+# 合并所有文件内容为一个字符串
+all_contents = ''.join(file_contents)
+
+# 按行分割并使用集合去重
+unique_lines = set(all_contents.split('\n'))
 
 # 写入合并后的文件
 with open("iptv_list.txt", "w", encoding="utf-8") as output:
