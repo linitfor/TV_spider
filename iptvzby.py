@@ -148,7 +148,7 @@ for url in urls:
         page_urls = re.findall(pattern, page_content)
         for urlx in page_urls:
             try:
-                response = requests.get(url=urlx + '/status', timeout=5)
+                response = requests.get(url=urlx + '/status', timeout=1)
                 response.raise_for_status()  # 返回状态码不是200异常
                 page_content = response.text
                 pattern = r'class="proctabl"'
@@ -294,200 +294,6 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
             else:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
-                        
-# 扫源湖北联通IPTV
-
-# 线程安全的队列，用于存储下载任务
-task_queue = Queue()
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
-
-urls = ["wuhan","huangshi","shiyan","yichang","xiangyang","ezhou","jingmen","xiaogan","jingzhou","huanggang","xianning","suizhou"]
-channelsx = [
-    "CCTV1,http://8.8.8.8:8/udp/228.0.0.1:6108","CCTV2,http://8.8.8.8:8/udp/228.0.0.2:6108","CCTV3,http://8.8.8.8:8/udp/228.0.0.156:7156","CCTV4,http://8.8.8.8:8/udp/228.0.0.143:7143",
-            "CCTV5,http://8.8.8.8:8/udp/228.0.0.112:6108","CCTV6,http://8.8.8.8:8/udp/228.0.0.157:7157","CCTV7,http://8.8.8.8:8/udp/228.0.0.7:6108","CCTV8,http://8.8.8.8:8/udp/228.0.0.158:7158",
-            "CCTV9,http://8.8.8.8:8/udp/228.0.0.9:6108","CCTV10,http://8.8.8.8:8/udp/228.0.0.10:6108","CCTV11,http://8.8.8.8:8/udp/228.0.0.242:6108","CCTV12,http://8.8.8.8:8/udp/228.0.0.12:6108",
-            "CCTV13,http://8.8.8.8:8/udp/228.0.0.202:6108","CCTV14,http://8.8.8.8:8/udp/228.0.0.14:6108","CCTV15,http://8.8.8.8:8/udp/228.0.0.15:6108","CCTVNEWS,http://8.8.8.8:8/udp/228.0.0.16:6108",
-            "CCTV17,http://8.8.8.8:8/udp/228.0.0.161:7161","CCTV5＋,http://8.8.8.8:8/udp/228.0.0.17:6108","CCTV16,http://8.8.8.8:8/udp/228.0.0.249:6108","湖北卫视,http://8.8.8.8:8/udp/228.0.0.60:6108",
-            "湖北经视,http://8.8.8.8:8/udp/228.0.0.125:6108","湖北综合,http://8.8.8.8:8/udp/228.0.0.126:6108","湖北垄上,http://8.8.8.8:8/udp/228.0.0.127:6108","湖北公共,http://8.8.8.8:8/udp/228.0.0.124:6108",
-            "湖北影视,http://8.8.8.8:8/udp/228.0.0.205:6108","湖北教育,http://8.8.8.8:8/udp/228.0.0.206:6108","湖北生活,http://8.8.8.8:8/udp/228.0.0.204:6108","武汉新闻,http://8.8.8.8:8/udp/228.0.0.162:7162",
-            "武汉电视剧,http://8.8.8.8:8/udp/228.0.0.163:7163","武汉生活,http://8.8.8.8:8/udp/228.0.0.89:6108","武汉文体,http://8.8.8.8:8/udp/228.0.0.164:7164","湖南卫视,http://8.8.8.8:8/udp/228.0.0.61:6108",
-            "浙江卫视,http://8.8.8.8:8/udp/228.0.0.65:6108","江苏卫视,http://8.8.8.8:8/udp/228.0.0.64:6108","东方卫视,http://8.8.8.8:8/udp/228.0.0.62:6108","北京卫视,http://8.8.8.8:8/udp/228.0.0.63:6108",
-            "广东卫视,http://8.8.8.8:8/udp/228.0.0.66:6108","深圳卫视,http://8.8.8.8:8/udp/228.0.0.67:6108","黑龙江卫视,http://8.8.8.8:8/udp/228.0.0.68:6108","天津卫视,http://8.8.8.8:8/udp/228.0.0.120:6108",
-            "山东卫视,http://8.8.8.8:8/udp/228.0.0.121:6108","安徽卫视,http://8.8.8.8:8/udp/228.0.0.122:6108","辽宁卫视,http://8.8.8.8:8/udp/228.0.0.123:6108","东南卫视,http://8.8.8.8:8/udp/228.0.0.144:7144",
-            "江西卫视,http://8.8.8.8:8/udp/228.0.0.147:7147","重庆卫视,http://8.8.8.8:8/udp/228.0.0.159:7159","贵州卫视,http://8.8.8.8:8/udp/228.0.0.160:7160","海南卫视,http://8.8.8.8:8/udp/228.0.0.165:7165",
-            "河南卫视,http://8.8.8.8:8/udp/228.0.0.230:6108","四川卫视,http://8.8.8.8:8/udp/228.0.0.231:6108","河北卫视,http://8.8.8.8:8/udp/228.0.0.168:7168","金鹰纪实,http://8.8.8.8:8/udp/228.0.0.145:7145",
-            "中国教育1,http://8.8.8.8:8/udp/228.0.0.146:7146","宜昌综合,http://8.8.8.8:8/udp/228.0.0.225:6108","宜昌旅游,http://8.8.8.8:8/udp/228.0.0.226:6108",
-]
-
-
-results = []
-channel = []
-urls_all = []
-resultsx = []
-resultxs = []
-error_channels = []
-
-for url in urls:
-    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4837"').encode("utf-8")), "utf-8")
-    url_64 = f'https://fofa.info/result?qbase64={url_0}'
-    print(url_64)
-    try:
-        response = requests.get(url_64, headers=headers, timeout=15)
-        page_content = response.text
-        print(f" {url}  访问成功")
-        pattern = r'href="(http://\d+\.\d+\.\d+\.\d+:\d+)"'
-        page_urls = re.findall(pattern, page_content)
-        for urlx in page_urls:
-            try:
-                response = requests.get(url=urlx + '/status', timeout=5)
-                response.raise_for_status()  # 返回状态码不是200异常
-                page_content = response.text
-                pattern = r'class="proctabl"'
-                page_proctabl = re.findall(pattern, page_content)
-                if page_proctabl:
-                    urls_all.append(urlx)
-                    print(f"{urlx} 可以访问")
-
-            except requests.RequestException as e:
-                pass
-    except:
-        print(f"{url_64} 访问失败")
-        pass
-
-urls_all = set(urls_all)  # 去重得到唯一的URL列表
-for urlx in urls_all:
-    channel = [f'{name},{url.replace("http://8.8.8.8:8", urlx)}' for name, url in
-               [line.strip().split(',') for line in channelsx]]
-    results.extend(channel)
-            
-results = sorted(results)
-# with open("hb2.txt", 'w', encoding='utf-8') as file:
-#     for result in results:
-#         file.write(result + "\n")
-#         print(result)
-
-# 定义工作线程函数
-def worker():
-    while True:
-        result = task_queue.get()
-        channel_name, channel_url = result.split(',', 1)
-        try:
-            response = requests.get(channel_url, stream=True, timeout=3)
-            if response.status_code == 200:
-                result = channel_name, channel_url
-                resultsx.append(result)
-                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-                print(
-                    f"可用频道：{len(resultsx)} , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-            else:
-                error_channels.append(result)
-                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-                print(
-                    f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-        except:
-            error_channels.append(result)
-            numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-            print(
-                f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-
-        # 标记任务完成
-        task_queue.task_done()
-
-
-# 创建多个工作线程
-num_threads = 20
-for _ in range(num_threads):
-    t = threading.Thread(target=worker, daemon=True)
-    t.start()
-
-# 添加下载任务到队列
-for result in results:
-    task_queue.put(result)
-
-# 等待所有任务完成
-task_queue.join()
-
-
-def channel_key(channel_name):
-    match = re.search(r'\d+', channel_name)
-    if match:
-        return int(match.group())
-    else:
-        return float('inf')  # 返回一个无穷大的数字作为关键字
-
-
-for resulta in resultsx:
-    channel_name, channel_url = resulta
-    resultx = channel_name, channel_url
-    resultxs.append(resultx)
-
-# 对频道进行排序
-resultxs.sort(key=lambda x: channel_key(x[0]))
-# now_today = datetime.date.today()
-
-result_counter = 20  # 每个频道需要的个数
-
-with open("hb2.txt", 'w', encoding='utf-8') as file:
-    channel_counters = {}
-    file.write('央视频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if 'CCTV' in channel_name or 'CGTN' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    channel_counters = {}
-    file.write('\n卫视频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if '卫视' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    channel_counters = {}
-    file.write('\n湖北频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if '湖北' in channel_name or '武汉' in channel_name or '宜昌' in channel_name or '黄石' in channel_name or '十堰' \
-                in channel_name or '荆门' in channel_name or '荆州' in channel_name or '随州' in channel_name or '襄阳' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    file.write('\n其他频道,#genre#\n')
-    for resultx in resultxs:
-        channel_name, channel_url = resultx
-        if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '湖北' not in channel_name and '武汉' not in channel_name and '宜昌' not in channel_name and '黄石' not in channel_name and '十堰' \
-              not in channel_name and '荆门' not in channel_name and '荆州' not in channel_name and '随州' not in channel_name and '襄阳' not in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-
 
 # 扫源河南联通IPTV
 
@@ -549,7 +355,7 @@ for url in urls:
         page_urls = re.findall(pattern, page_content)
         for urlx in page_urls:
             try:
-                response = requests.get(url=urlx + '/status', timeout=5)
+                response = requests.get(url=urlx + '/status', timeout=1)
                 response.raise_for_status()  # 返回状态码不是200异常
                 page_content = response.text
                 pattern = r'class="proctabl"'
@@ -696,212 +502,6 @@ with open("he.txt", 'w', encoding='utf-8') as file:
                 file.write(f"{channel_name},{channel_url}\n")
                 channel_counters[channel_name] = 1
 
-# 扫源河南电信IPTV
-
-# 线程安全的队列，用于存储下载任务
-task_queue = Queue()
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
-
-urls = ["zhengzhou","luoyang","kaifeng","xuchang","anyang","nanyang","xinxiang","zhoukou","zhumadian","luohe","puyang","xinyang","hebi","jiaozuo"]
-channelsx = [
-    "CCTV1,http://8.8.8.8:8/rtp/239.16.10.1:2000","CCTV2,http://8.8.8.8:8/rtp/239.16.10.127:2000","CCTV3,http://8.8.8.8:8/rtp/239.16.10.2:2000","CCTV4,http://8.8.8.8:8/rtp/239.16.10.128:2000",
-            "CCTV5,http://8.8.8.8:8/rtp/239.16.10.132:2000","CCTV5+,http://8.8.8.8:8/rtp/239.16.10.3:2000","CCTV6,http://8.8.8.8:8/rtp/239.16.10.101:2000","CCTV7,http://8.8.8.8:8/rtp/239.16.10.130:2000",
-            "CCTV8,http://8.8.8.8:8/rtp/239.16.10.102:2000","CCTV9,http://8.8.8.8:8/rtp/239.16.10.103:2000","CCTV10,http://8.8.8.8:8/rtp/239.16.10.108:2000","CCTV11,http://8.8.8.8:8/rtp/239.16.10.109:2000",
-            "CCTV12,http://8.8.8.8:8/rtp/239.16.10.110:2000","CCTV13,http://8.8.8.8:8/rtp/239.16.10.111:2000","CCTV14,http://8.8.8.8:8/rtp/239.16.10.112:2000","CCTV15,http://8.8.8.8:8/rtp/239.16.10.113:2000",
-            "CCTV17,http://8.8.8.8:8/rtp/239.16.10.129:2000","浙江卫视,http://8.8.8.8:8/rtp/239.16.10.5:2000","湖南卫视,http://8.8.8.8:8/rtp/239.16.10.6:2000","东方卫视,http://8.8.8.8:8/rtp/239.16.10.7:2000",
-            "江苏卫视,http://8.8.8.8:8/rtp/239.16.10.8:2000","安徽卫视,http://8.8.8.8:8/rtp/239.16.10.9:2000","北京卫视,http://8.8.8.8:8/rtp/239.16.10.10:2000","深圳卫视,http://8.8.8.8:8/rtp/239.16.10.11:2000",
-            "重庆卫视,http://8.8.8.8:8/rtp/239.16.10.13:2000","山东卫视,http://8.8.8.8:8/rtp/239.16.10.14:2000","东南卫视,http://8.8.8.8:8/rtp/239.16.10.16:2000","云南卫视,http://8.8.8.8:8/rtp/239.16.10.19:2000",
-            "四川卫视,http://8.8.8.8:8/rtp/239.16.10.20:2000","湖北卫视,http://8.8.8.8:8/rtp/239.16.10.21:2000","河北卫视,http://8.8.8.8:8/rtp/239.16.10.22:2000","江西卫视,http://8.8.8.8:8/rtp/239.16.10.23:2000",
-            "吉林卫视,http://8.8.8.8:8/rtp/239.16.10.28:2000","辽宁卫视,http://8.8.8.8:8/rtp/239.16.10.29:2000","天津卫视,http://8.8.8.8:8/rtp/239.16.10.30:2000","海南卫视,http://8.8.8.8:8/rtp/239.16.10.43:2000",
-            "广东卫视,http://8.8.8.8:8/rtp/239.16.10.104:2000","黑龙江卫视,http://8.8.8.8:8/rtp/239.16.10.105:2000","青海卫视,http://8.8.8.8:8/rtp/239.16.10.107:2000","陕西卫视,http://8.8.8.8:8/rtp/239.16.10.17:2000",
-            "贵州卫视,http://8.8.8.8:8/rtp/239.16.10.15:2000","广西卫视,http://8.8.8.8:8/rtp/239.16.10.18:2000","山西卫视,http://8.8.8.8:8/rtp/239.16.10.24:2000","内蒙古卫视,http://8.8.8.8:8/rtp/239.16.10.25:2000",
-            "甘肃卫视,http://8.8.8.8:8/rtp/239.16.10.114:2000","西藏卫视,http://8.8.8.8:8/rtp/239.16.10.106:2000","金鹰卡通,http://8.8.8.8:8/rtp/239.16.10.115:2000","宁夏卫视,http://8.8.8.8:8/rtp/239.16.10.26:2000",
-            "新疆卫视,http://8.8.8.8:8/rtp/239.16.10.27:2000","CETV-1,http://8.8.8.8:8/rtp/239.16.10.12:2000","河南移动戏曲,http://8.8.8.8:8/rtp/239.16.10.76:2000","河南睛彩中原,http://8.8.8.8:8/rtp/239.16.10.78:2000",
-            "河南移动电视,http://8.8.8.8:8/rtp/239.16.10.79:2000","河南卫视,http://8.8.8.8:8/rtp/239.16.10.119:2000","河南都市频道,http://8.8.8.8:8/rtp/239.16.10.120:2000",
-            "河南民生频道,http://8.8.8.8:8/rtp/239.16.10.121:2000","河南法治频道,http://8.8.8.8:8/rtp/239.16.10.122:2000","河南电视剧频道,http://8.8.8.8:8/rtp/239.16.10.123:2000",
-            "河南新闻频道,http://8.8.8.8:8/rtp/239.16.10.124:2000","河南欢腾购物,http://8.8.8.8:8/rtp/239.16.10.125:2000","河南公共频道,http://8.8.8.8:8/rtp/239.16.10.126:2000",
-            "河南乡村频道,http://8.8.8.8:8/rtp/239.16.10.181:2000","河南国际频道,http://8.8.8.8:8/rtp/239.16.10.182:2000","河南4K实验,http://8.8.8.8:8/rtp/239.16.10.210:2000",
-            "河南欢腾购物,http://8.8.8.8:8/rtp/239.16.10.216:2000","河南IPTV导视,http://8.8.8.8:8/rtp/239.16.10.218:2000","百姓调解,http://8.8.8.8:8/rtp/239.16.10.183:2000",
-            "纪实人文,http://8.8.8.8:8/rtp/239.16.10.190:2000","大象新闻,http://8.8.8.8:8/rtp/239.16.10.192:2000","国学频道,http://8.8.8.8:8/rtp/239.16.10.217:2000","健康中原,http://8.8.8.8:8/rtp/239.16.10.131:2000",
-            "河南戏曲,http://8.8.8.8:8/rtp/239.16.10.148:2000","河南文博,http://8.8.8.8:8/rtp/239.16.10.149:2000","河南功夫,http://8.8.8.8:8/rtp/239.16.10.150:2000","快乐垂钓,http://8.8.8.8:8/rtp/239.16.10.236:2000",
-            "茶频道,http://8.8.8.8:8/rtp/239.16.10.237:2000","SiTV都市剧场,http://8.8.8.8:8/rtp/239.16.10.232:2000","SiTV动漫秀场,http://8.8.8.8:8/rtp/239.16.10.234:2000",
-            "SiTV东方财经,http://8.8.8.8:8/rtp/239.16.10.235:2000","SiTV乐游,http://8.8.8.8:8/rtp/239.16.10.240:2000","SiTV游戏风云,http://8.8.8.8:8/rtp/239.16.10.241:2000",
-            "SiTV魅力足球,http://8.8.8.8:8/rtp/239.16.10.242:2000","SiTV生活时尚,http://8.8.8.8:8/rtp/239.16.10.243:2000","SiTV金色学堂,http://8.8.8.8:8/rtp/239.16.10.244:2000",
-            "郑州1新闻综合,http://8.8.8.8:8/rtp/239.16.10.154:2000","郑州2商都频道,http://8.8.8.8:8/rtp/239.16.10.155:2000","郑州3文体频道,http://8.8.8.8:8/rtp/239.16.10.156:2000",
-            "郑州4影视戏曲,http://8.8.8.8:8/rtp/239.16.10.157:2000",
-]
-
-
-results = []
-channel = []
-urls_all = []
-resultsx = []
-resultxs = []
-error_channels = []
-
-for url in urls:
-    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4134"').encode("utf-8")), "utf-8")
-    url_64 = f'https://fofa.info/result?qbase64={url_0}'
-    print(url_64)
-    try:
-        response = requests.get(url_64, headers=headers, timeout=15)
-        page_content = response.text
-        print(f" {url}  访问成功")
-        pattern = r'href="(http://\d+\.\d+\.\d+\.\d+:\d+)"'
-        page_urls = re.findall(pattern, page_content)
-        for urlx in page_urls:
-            try:
-                response = requests.get(url=urlx + '/status', timeout=5)
-                response.raise_for_status()  # 返回状态码不是200异常
-                page_content = response.text
-                pattern = r'class="proctabl"'
-                page_proctabl = re.findall(pattern, page_content)
-                if page_proctabl:
-                    urls_all.append(urlx)
-                    print(f"{urlx} 可以访问")
-
-            except requests.RequestException as e:
-                pass
-    except:
-        print(f"{url_64} 访问失败")
-        pass
-
-urls_all = set(urls_all)  # 去重得到唯一的URL列表
-for urlx in urls_all:
-    channel = [f'{name},{url.replace("http://8.8.8.8:8", urlx)}' for name, url in
-               [line.strip().split(',') for line in channelsx]]
-    results.extend(channel)
-            
-results = sorted(results)
-# with open("he2.txt", 'w', encoding='utf-8') as file:
-#     for result in results:
-#         file.write(result + "\n")
-#         print(result)
-
-# 定义工作线程函数
-def worker():
-    while True:
-        result = task_queue.get()
-        channel_name, channel_url = result.split(',', 1)
-        try:
-            response = requests.get(channel_url, stream=True, timeout=3)
-            if response.status_code == 200:
-                result = channel_name, channel_url
-                resultsx.append(result)
-                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-                print(
-                    f"可用频道：{len(resultsx)} , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-            else:
-                error_channels.append(result)
-                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-                print(
-                    f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-        except:
-            error_channels.append(result)
-            numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-            print(
-                f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-
-        # 标记任务完成
-        task_queue.task_done()
-
-
-# 创建多个工作线程
-num_threads = 20
-for _ in range(num_threads):
-    t = threading.Thread(target=worker, daemon=True)
-    t.start()
-
-# 添加下载任务到队列
-for result in results:
-    task_queue.put(result)
-
-# 等待所有任务完成
-task_queue.join()
-
-
-def channel_key(channel_name):
-    match = re.search(r'\d+', channel_name)
-    if match:
-        return int(match.group())
-    else:
-        return float('inf')  # 返回一个无穷大的数字作为关键字
-
-
-for resulta in resultsx:
-    channel_name, channel_url = resulta
-    resultx = channel_name, channel_url
-    resultxs.append(resultx)
-
-# 对频道进行排序
-resultxs.sort(key=lambda x: channel_key(x[0]))
-# now_today = datetime.date.today()
-
-result_counter = 20  # 每个频道需要的个数
-
-with open("he2.txt", 'w', encoding='utf-8') as file:
-    channel_counters = {}
-    file.write('央视频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if 'CCTV' in channel_name or 'CGTN' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    channel_counters = {}
-    file.write('\n卫视频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if '卫视' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    channel_counters = {}
-    file.write('\n河南频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if '河南' in channel_name or '郑州' in channel_name or '中原' in channel_name or '新郑' in channel_name or '新密' \
-                in channel_name or '中牟' in channel_name or '巩义' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    file.write('\n其他频道,#genre#\n')
-    for resultx in resultxs:
-        channel_name, channel_url = resultx
-        if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '河南' not in channel_name and '郑州' not in channel_name and '中原' not in channel_name and '新郑' not in channel_name and '新密' \
-              not in channel_name and '中牟' not in channel_name and '巩义' not in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-
-
-
 # 扫源北京联通IPTV
 
 # 线程安全的队列，用于存储下载任务
@@ -961,7 +561,7 @@ for url in urls:
         page_urls = re.findall(pattern, page_content)
         for urlx in page_urls:
             try:
-                response = requests.get(url=urlx + '/status', timeout=5)
+                response = requests.get(url=urlx + '/status', timeout=1)
                 response.raise_for_status()  # 返回状态码不是200异常
                 page_content = response.text
                 pattern = r'class="proctabl"'
@@ -1050,204 +650,6 @@ resultxs.sort(key=lambda x: channel_key(x[0]))
 result_counter = 20  # 每个频道需要的个数
 
 with open("bj.txt", 'w', encoding='utf-8') as file:
-    channel_counters = {}
-    file.write('央视频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if 'CCTV' in channel_name or 'CGTN' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    channel_counters = {}
-    file.write('\n卫视频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if '卫视' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    channel_counters = {}
-    file.write('\n北京频道,#genre#\n')
-    for result in resultxs:
-        channel_name, channel_url = result
-        if '北京' in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-    file.write('\n其他频道,#genre#\n')
-    for resultx in resultxs:
-        channel_name, channel_url = resultx
-        if 'CCTV' not in channel_name and 'CGTN' not in channel_name and '卫视' not in channel_name and '北京' not in channel_name:
-            if channel_name in channel_counters:
-                if channel_counters[channel_name] >= result_counter:
-                    continue
-                else:
-                    file.write(f"{channel_name},{channel_url}\n")
-                    channel_counters[channel_name] += 1
-            else:
-                file.write(f"{channel_name},{channel_url}\n")
-                channel_counters[channel_name] = 1
-
-# 扫源北京电信IPTV
-
-# 线程安全的队列，用于存储下载任务
-task_queue = Queue()
-
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
-
-urls = ["beijing"]
-channelsx = ["CCTV1,http://8.8.8.8:8/rtp/225.1.0.103:1025","CCTV2,http://8.8.8.8:8/rtp/225.1.0.104:1025","CCTV3,http://8.8.8.8:8/rtp/225.1.8.88:8000",
-             "CCTV4,http://8.8.8.8:8/rtp/225.1.0.102:1025","CCTV5,http://8.8.8.8:8/rtp/225.1.8.89:8000","CCTV5+,http://8.8.8.8:8/rtp/225.1.0.110:1025",
-             "CCTV6,http://8.8.8.8:8/rtp/225.1.8.84:8000","CCTV7,http://8.8.8.8:8/rtp/225.1.0.105:1025","CCTV8,http://8.8.8.8:8/rtp/225.1.8.85:8000",
-             "CCTV9,http://8.8.8.8:8/rtp/225.1.0.106:1025","CCTV10,http://8.8.8.8:8/rtp/225.1.0.107:1025","CCTV11,http://8.8.8.8:8/rtp/225.1.0.85:8120",
-             "CCTV12,http://8.8.8.8:8/rtp/225.1.0.108:1025","CCTV13,http://8.8.8.8:8/rtp/225.1.8.168:8130","CCTV14,http://8.8.8.8:8/rtp/225.1.0.109:1025",
-             "CCTV15,http://8.8.8.8:8/rtp/225.1.0.92:8136","CCTV16,http://8.8.8.8:8/rtp/225.1.8.189:8002","CCTV17,http://8.8.8.8:8/rtp/225.1.0.95:8144",
-             "CCTV4K,http://8.8.8.8:8/rtp/225.1.8.223:2000","CCTV4K,http://8.8.8.8:8/rtp/225.1.8.224:2000","IPTV 4K超清,http://8.8.8.8:8/rtp/225.1.0.205:1025",
-             "测试4K超清,http://8.8.8.8:8/rtp/225.1.8.80:2000","爱上4K,http://8.8.8.8:8/rtp/225.1.0.101:1025","北京财经,http://8.8.8.8:8/rtp/225.1.8.106:8002",
-             "北京国际,http://8.8.8.8:8/rtp/225.1.0.152:1025","北京纪实科教,http://8.8.8.8:8/rtp/225.1.8.105:8002","北京卡酷少儿,http://8.8.8.8:8/rtp/225.1.8.36:8002",
-             "北京生活,http://8.8.8.8:8/rtp/225.1.0.209:1025","北京体育休闲,http://8.8.8.8:8/rtp/225.1.0.113:1025","北京文艺,http://8.8.8.8:8/rtp/225.1.8.22:8002",
-             "北京新闻,http://8.8.8.8:8/rtp/225.1.0.83:8000","北京影视,http://8.8.8.8:8/rtp/225.1.8.82:8000","安徽卫视,http://8.8.8.8:8/rtp/225.1.0.128:1025",
-             "北京卫视,http://8.8.8.8:8/rtp/225.1.0.111:1025","东方卫视,http://8.8.8.8:8/rtp/225.1.0.121:1025","东南卫视,http://8.8.8.8:8/rtp/225.1.0.90:8148",
-             "广东卫视,http://8.8.8.8:8/rtp/225.1.0.125:1025","贵州卫视,http://8.8.8.8:8/rtp/225.1.0.88:8076","河北卫视,http://8.8.8.8:8/rtp/225.1.8.76:8002",
-             "河南卫视,http://8.8.8.8:8/rtp/225.1.0.71:8184","黑龙江卫视,http://8.8.8.8:8/rtp/225.1.0.118:1025","湖北卫视,http://8.8.8.8:8/rtp/225.1.0.123:1025",
-             "湖南卫视,http://8.8.8.8:8/rtp/225.1.0.117:1025","江苏卫视,http://8.8.8.8:8/rtp/225.1.0.120:1025","辽宁卫视,http://8.8.8.8:8/rtp/225.1.0.127:1025",
-             "三沙卫视,http://8.8.8.8:8/rtp/225.1.8.78:4120","山东卫视,http://8.8.8.8:8/rtp/225.1.0.126:1025","深圳卫视,http://8.8.8.8:8/rtp/225.1.0.119:1025",
-             "天津卫视,http://8.8.8.8:8/rtp/225.1.0.124:1025","浙江卫视,http://8.8.8.8:8/rtp/225.1.0.122:1025","重庆卫视,http://8.8.8.8:8/rtp/225.1.1.9:8164","上海纪实,http://8.8.8.8:8/rtp/225.1.8.53:8060",
-             "纪实人文,http://8.8.8.8:8/rtp/225.1.0.129:1025","金鹰纪实,http://8.8.8.8:8/rtp/225.1.0.243:1025","睛彩竞技,http://8.8.8.8:8/rtp/225.1.8.209:8002","睛彩羽毛球,http://8.8.8.8:8/rtp/225.1.8.214:8002",
-             "快乐垂钓,http://8.8.8.8:8/rtp/225.1.0.97:1025","萌宠TV,http://8.8.8.8:8/rtp/225.1.0.210:1025","卡酷动画,http://8.8.8.8:8/rtp/225.1.8.35:8000","淘baby,http://8.8.8.8:8/rtp/225.1.0.206:1025",
-             "淘电影,http://8.8.8.8:8/rtp/225.1.0.115:1025","淘剧场,http://8.8.8.8:8/rtp/225.1.0.114:1025","淘娱乐,http://8.8.8.8:8/rtp/225.1.0.212:1025","中国交通,http://8.8.8.8:8/rtp/225.1.8.208:8002",
-             "中国教育1台,http://8.8.8.8:8/rtp/225.1.0.242:1025","茶频道,http://8.8.8.8:8/rtp/225.1.0.96:1025","大健康,http://8.8.8.8:8/rtp/225.1.0.116:1025","房山电视台,http://8.8.8.8:8/rtp/225.1.0.250:1025",
-             "密云电视台,http://8.8.8.8:8/rtp/225.1.8.75:8002","通州电视台,http://8.8.8.8:8/rtp/225.1.8.119:8002","朝阳融媒,http://8.8.8.8:8/rtp/225.1.0.100:1025",
-]
-
-
-results = []
-channel = []
-urls_all = []
-resultsx = []
-resultxs = []
-error_channels = []
-
-for url in urls:
-    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4847"').encode("utf-8")), "utf-8")
-    url_64 = f'https://fofa.info/result?qbase64={url_0}'
-    print(url_64)
-    try:
-        response = requests.get(url_64, headers=headers, timeout=15)
-        page_content = response.text
-        print(f" {url}  访问成功")
-        pattern = r'href="(http://\d+\.\d+\.\d+\.\d+:\d+)"'
-        page_urls = re.findall(pattern, page_content)
-        for urlx in page_urls:
-            try:
-                response = requests.get(url=urlx + '/status', timeout=5)
-                response.raise_for_status()  # 返回状态码不是200异常
-                page_content = response.text
-                pattern = r'class="proctabl"'
-                page_proctabl = re.findall(pattern, page_content)
-                if page_proctabl:
-                    urls_all.append(urlx)
-                    print(f"{urlx} 可以访问")
-
-            except requests.RequestException as e:
-                pass
-    except:
-        print(f"{url_64} 访问失败")
-        pass
-
-urls_all = set(urls_all)  # 去重得到唯一的URL列表
-for urlx in urls_all:
-    channel = [f'{name},{url.replace("http://8.8.8.8:8", urlx)}' for name, url in
-               [line.strip().split(',') for line in channelsx]]
-    results.extend(channel)
-
-results = sorted(results)
-# with open("bj2.txt", 'w', encoding='utf-8') as file:
-#     for result in results:
-#         file.write(result + "\n")
-#         print(result)
-
-# 定义工作线程函数
-def worker():
-    while True:
-        result = task_queue.get()
-        channel_name, channel_url = result.split(',', 1)
-        try:
-            response = requests.get(channel_url, stream=True, timeout=3)
-            if response.status_code == 200:
-                result = channel_name, channel_url
-                resultsx.append(result)
-                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-                print(
-                    f"可用频道：{len(resultsx)} , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-            else:
-                error_channels.append(result)
-                numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-                print(
-                    f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-        except:
-            error_channels.append(result)
-            numberx = (len(resultsx) + len(error_channels)) / len(results) * 100
-            print(
-                f"可用频道：{len(resultsx)} 个 , 不可用频道：{len(error_channels)} 个 , 总频道：{len(results)} 个 ,总进度：{numberx:.2f} %。")
-
-        # 标记任务完成
-        task_queue.task_done()
-
-
-# 创建多个工作线程
-num_threads = 20
-for _ in range(num_threads):
-    t = threading.Thread(target=worker, daemon=True)
-    t.start()
-
-# 添加下载任务到队列
-for result in results:
-    task_queue.put(result)
-
-# 等待所有任务完成
-task_queue.join()
-
-
-def channel_key(channel_name):
-    match = re.search(r'\d+', channel_name)
-    if match:
-        return int(match.group())
-    else:
-        return float('inf')  # 返回一个无穷大的数字作为关键字
-
-
-for resulta in resultsx:
-    channel_name, channel_url = resulta
-    resultx = channel_name, channel_url
-    resultxs.append(resultx)
-
-# 对频道进行排序
-resultxs.sort(key=lambda x: channel_key(x[0]))
-# now_today = datetime.date.today()
-
-result_counter = 20  # 每个频道需要的个数
-
-with open("bj2.txt", 'w', encoding='utf-8') as file:
     channel_counters = {}
     file.write('央视频道,#genre#\n')
     for result in resultxs:
@@ -1464,7 +866,7 @@ for url in urls:
         page_urls = re.findall(pattern, page_content)
         for urlx in page_urls:
             try:
-                response = requests.get(url=urlx + '/status', timeout=5)
+                response = requests.get(url=urlx + '/status', timeout=1)
                 response.raise_for_status()  # 返回状态码不是200异常
                 page_content = response.text
                 pattern = r'class="proctabl"'
@@ -1653,7 +1055,7 @@ for url in urls:
         page_urls = re.findall(pattern, page_content)
         for urlx in page_urls:
             try:
-                response = requests.get(url=urlx + '/status', timeout=5)
+                response = requests.get(url=urlx + '/status', timeout=1)
                 response.raise_for_status()  # 返回状态码不是200异常
                 page_content = response.text
                 pattern = r'class="proctabl"'
@@ -1782,7 +1184,7 @@ def merge_channels(file_name):
 
 # 合并自定义频道文件内容
 file_contents = []
-file_paths = ["hb.txt","hb2.txt","he.txt","he2.txt","bj.txt","bj2.txt","hn.txt","ph.txt","GAT.txt","gat2.txt","sport.txt"]  # 替换为实际的文件路径列表
+file_paths = ["hb.txt","he.txt","bj.txt","hn.txt","ph.txt","GAT.txt","gat2.txt","sport.txt"]  # 替换为实际的文件路径列表
 for file_path in file_paths:
     with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
@@ -1803,11 +1205,8 @@ with open("iptv_list.txt", "a", encoding="utf-8") as output:  # 使用 "a" 模�
     output.write(f"{now.strftime('%H:%M:%S')},url\n")
 
 os.remove("hb.txt")
-os.remove("hb2.txt")
 os.remove("he.txt")
-os.remove("he2.txt")
 os.remove("bj.txt")
-os.remove("bj2.txt")
 os.remove("hn.txt")
 os.remove("ph.txt")
 os.remove("DIYP-v4.txt")
