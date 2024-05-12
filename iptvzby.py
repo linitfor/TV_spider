@@ -742,7 +742,7 @@ resultxs = []
 error_channels = []
 
 for url in urls:
-    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4837"').encode("utf-8")), "utf-8")
+    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4134"').encode("utf-8")), "utf-8")
     url_64 = f'https://fofa.info/result?qbase64={url_0}'
     print(url_64)
     try:
@@ -1148,7 +1148,7 @@ resultxs = []
 error_channels = []
 
 for url in urls:
-    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4808"').encode("utf-8")), "utf-8")
+    url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4847"').encode("utf-8")), "utf-8")
     url_64 = f'https://fofa.info/result?qbase64={url_0}'
     print(url_64)
     try:
