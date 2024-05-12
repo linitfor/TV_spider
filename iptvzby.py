@@ -341,7 +341,7 @@ for url in urls:
         page_urls = re.findall(pattern, page_content)
         for urlx in page_urls:
             try:
-                response = requests.get(url=urlx + '/status', timeout=5
+                response = requests.get(url=urlx + '/status', timeout=5)
                 response.raise_for_status()  # 返回状态码不是200异常
                 page_content = response.text
                 pattern = r'class="proctabl"'
