@@ -95,7 +95,7 @@ task_queue = Queue()
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
 
-urls = ["wuhan","huangshi","shiyan","yichang","xiangyang","ezhou","jingmen","xiaogan","jingzhou","huanggang","xianning","suizhou"]
+urls = ["wuhan", "yichang", "xiangyang", "jingzhou", "ezhou", "huangshi", "shiyan", "jingmen", "xiaogan", "huanggang", "xianning", "suizhou", "enshi"]
 channelsx = [
     "湖北公共新闻,http://8.8.8.8:8/rtp/239.69.1.40:9880","湖北经视,http://8.8.8.8:8/rtp/239.69.1.41:9886","湖北综合,http://8.8.8.8:8/rtp/239.69.1.42:9892",
 "湖北垄上,http://8.8.8.8:8/rtp/239.69.1.43:9898","湖北影视,http://8.8.8.8:8/rtp/239.69.1.204:10866","湖北生活,http://8.8.8.8:8/rtp/239.69.1.205:10872",
@@ -269,8 +269,7 @@ with open("hb.txt", 'w', encoding='utf-8') as file:
     file.write('\n湖北频道,#genre#\n')
     for result in resultxs:
         channel_name, channel_url = result
-        if '湖北' in channel_name or '武汉' in channel_name or '宜昌' in channel_name or '黄石' in channel_name or '十堰' \
-                in channel_name or '荆门' in channel_name or '荆州' in channel_name or '随州' in channel_name or '襄阳' in channel_name:
+        if '湖北' in channel_name or '武汉' in channel_name or '宜昌' in channel_name or '黄石' in channel_name or '十堰' in channel_name or '荆门' in channel_name or '荆州' in channel_name or '随州' in channel_name or '襄阳' in channel_name:
             if channel_name in channel_counters:
                 if channel_counters[channel_name] >= result_counter:
                     continue
@@ -303,7 +302,7 @@ task_queue = Queue()
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
 
-urls = ["zhengzhou","luoyang","kaifeng","xuchang","anyang","nanyang","xinxiang","zhoukou","zhumadian","luohe","puyang","xinyang","hebi","jiaozuo"]
+urls = ["zhengzhou", "kaifeng", "luoyang", "pingdingshan", "anyang", "hebi", "xinxiang", "jiaozuo", "puyang", "xuchang", "luohe", "sanmenxia", "nanyang", "shangqiu", "xinyang", "zhoukou", "zhumadian"]
 channelsx = [
     "CCTV1,http://8.8.8.8:8/rtp/225.1.4.73:1102","CCTV2,http://8.8.8.8:8/rtp/225.1.4.74:1103","CCTV3,http://8.8.8.8:8/rtp/225.1.4.158:1194",
     "CCTV4,http://8.8.8.8:8/rtp/225.1.5.30:1333","CCTV5,http://8.8.8.8:8/rtp/225.1.4.159:1195","CCTV6,http://8.8.8.8:8/rtp/225.1.4.160:1196",
