@@ -138,7 +138,7 @@ error_channels = []
 
 for url in urls:
     url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4134"').encode("utf-8")), "utf-8")
-    url_64 = f'https://fofa.info/result?qbase64={url_0}'
+    url_64 = f'https://fofa.info/result?qbase64={url_0}&page=1&page_size=20'
     print(url_64)
     try:
         response = requests.get(url_64, headers=headers, timeout=15)
@@ -344,7 +344,7 @@ error_channels = []
 
 for url in urls:
     url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4837"').encode("utf-8")), "utf-8")
-    url_64 = f'https://fofa.info/result?qbase64={url_0}'
+    url_64 = f'https://fofa.info/result?qbase64={url_0}&page=1&page_size=20'
     print(url_64)
     try:
         response = requests.get(url_64, headers=headers, timeout=15)
@@ -550,7 +550,7 @@ error_channels = []
 
 for url in urls:
     url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4808"').encode("utf-8")), "utf-8")
-    url_64 = f'https://fofa.info/result?qbase64={url_0}'
+    url_64 = f'https://fofa.info/result?qbase64={url_0}&page=1&page_size=20'
     print(url_64)
     try:
         response = requests.get(url_64, headers=headers, timeout=15)
@@ -855,7 +855,7 @@ error_channels = []
 
 for url in urls:
     url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4134"').encode("utf-8")), "utf-8")
-    url_64 = f'https://fofa.info/result?qbase64={url_0}'
+    url_64 = f'https://fofa.info/result?qbase64={url_0}&page=1&page_size=20'
     print(url_64)
     try:
         response = requests.get(url_64, headers=headers, timeout=15)
@@ -1044,7 +1044,7 @@ error_channels = []
 
 for url in urls:
     url_0 = str(base64.b64encode((f'"Server: udpxy" && city="{url}" && asn="4134"').encode("utf-8")), "utf-8")
-    url_64 = f'https://fofa.info/result?qbase64={url_0}'
+    url_64 = f'https://fofa.info/result?qbase64={url_0}&page=1&page_size=20'
     print(url_64)
     try:
         response = requests.get(url_64, headers=headers, timeout=15)
